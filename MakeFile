@@ -15,10 +15,8 @@ IFLAGS = -I./include/ -I./LOG/ -I./../
 
 #compiling & linking
 
-OBJ_DIR = build
-
 OBJ_TMP = $(subst .cpp,.o, $(SRC))
-OBJ     = $(subst src,$(OBJ_DIR), $(OBJ_TMP))
+OBJ     = $(subst src,build, $(OBJ_TMP))
 
 link : $(OBJ)
 	$(CC) $(IFLAGS) $(CFLAGS) $^ -o $(OUTPUT_FILE_NAME)  
@@ -26,5 +24,5 @@ link : $(OBJ)
 #compile
 %.o : 
 	mkdir -p $(@D)
-	$(CC) $(IFLAGS) $(CFLAGS) -c $(subst .o,.cpp, $(subst $(OBJ_DIR),src, $@)) -o $@
+	$(CC) $(IFLAGS) $(CFLAGS) -c $(subst .o,.cpp, $(subst build,src, $@)) -o $@
 
