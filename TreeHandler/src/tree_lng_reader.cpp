@@ -1,7 +1,10 @@
 
-#include "tree_lng_reader.h"
+
+#include "config.h"
 
 #include "tree_lng.h"
+#include "tree_lng_reader.h"
+#include "dsl.h"
 #include "my_assert.h"
 
 #include <stdio.h>
@@ -10,12 +13,11 @@
 
 //-----------------------------------------------------------------------------
 
-int LoadLngTree( const char* lngData, Node* node ) 
+Node* LoadLngTree( const char* lngData ) 
 {
-    ASSERT( node    != NULL, 0 );
-    ASSERT( lngData != NULL, 0 );
+    ASSERT( lngData != NULL, NULL );
 
-    Node* currNode = node;
+    Node* currNode = CREATE_VAL_NODE( 0 );
     int   currOp   = -1;
 
     int len = strlen( lngData );
@@ -38,19 +40,19 @@ int LoadLngTree( const char* lngData, Node* node )
             }
         }
 
-        if( lngData[i] == ')' )
+        if( lngData[i] == '}' )
         {
             currNode = currNode->parent;
             continue;
         }
 
         //i += SetDiffNode( currNode, diffData + i, &currOp );
-        i --;
+        //i --; 
     }
 
     //LinkNodeParents( node, NULL );
 
-    return 1;
+    return currNode;
 }
 
 //-----------------------------------------------------------------------------

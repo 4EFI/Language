@@ -30,6 +30,8 @@ struct Node
 int NodeCtor( Node* node );
 int NodeDtor( Node* node );
 
+Node* CreateLngNode( int type, double dbl, int op, char* var = NULL, Node* left = NULL, Node* right = NULL, Node* parent = NULL );
+
 Node* TreeSetNodeValue( Node* node, TreeElem_t val );
 Node* TreeAddChild    ( Node* node, TreeElem_t val, int side );
 

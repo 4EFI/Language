@@ -24,13 +24,31 @@ int NodeCtor( Node* node )
 
     node->parent = NULL;
 
-    node->left   = NULL;
-    node->right  = NULL;
+    node->left  = NULL;
+    node->right = NULL;
 
     return 1;
 }  
 
 //-----------------------------------------------------------------------------
+
+Node* CreateLngNode( int type, double dbl, int op, char* var, Node* left, Node* right, Node* parent )
+{    
+    Node* newNode = ( Node* )calloc( 1, sizeof( Node ) );
+
+    newNode->value           = ( LngNode* )calloc( 1, sizeof( LngNode ) );    
+    newNode->value->type     = type;
+    newNode->value->dblValue = dbl;
+    newNode->value->opValue  = op;
+    newNode->value->varValue = var;
+
+    newNode->parent = parent;
+    newNode->left   = left;
+    newNode->right  = right;
+
+    return newNode;
+}
+
 
 int NodeDtor( Node* node )
 {

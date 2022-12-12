@@ -3,4 +3,6 @@
 
 #include "config.h"
 
+Node* LoadLngTree( const char* lngData );
+
 #endif

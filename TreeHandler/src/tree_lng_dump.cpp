@@ -4,15 +4,21 @@
 #include "my_assert.h"
 
 #include <stdio.h>
-#include <args.h>
+#include <stdlib.h>
+#include <stdarg.h> 
+
+FILE* FileLngDump = fopen( FileLngDumpName, "w" );
 
 // DiffDump
 //-----------------------------------------------------------------------------
 
 int GraphVizNodes( Node* node, FILE* dotFile, int* nodeNum )
 {
-    ASSERT( dotFile != NULL && nodeNum != NULL, 0 );
-    
+    ASSERT( dotFile != NULL, 0 );
+    ASSERT( nodeNum != NULL, 0 );
+
+    if( !node ) return 0;
+
     int leftNum  = 0;
     int rightNum = 0;
     
@@ -36,7 +42,7 @@ int GraphVizNodes( Node* node, FILE* dotFile, int* nodeNum )
     else if( typeNum == Types::VAR_TYPE ) { typeStr = "var" ; color = "lightblue"  ; }
 
     char valueStr[ MaxStrLen ] = "";
-    PrintDiffNodeValue( valueStr, node );
+    // PrintDiffNodeValue( valueStr, node );
     
     fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ p: %p | n: %p | { %s | %s } }\" ];\n", 
                        *nodeNum, color, node->parent, node, typeStr, valueStr );                                      
@@ -56,7 +62,7 @@ int GraphVizNodes( Node* node, FILE* dotFile, int* nodeNum )
 
 //-----------------------------------------------------------------------------
 
-FILE* DiffCreateDotDumpFile( Node* node, const char* fileName )
+FILE* LngCreateDotDumpFile( Node* node, const char* fileName )
 {
     ASSERT( node != NULL, NULL );
 
@@ -75,12 +81,12 @@ FILE* DiffCreateDotDumpFile( Node* node, const char* fileName )
 
 //-----------------------------------------------------------------------------
 
-int DiffGraphDump( Node* node, const char* str, ... )
+int LngGraphDump( Node* node, const char* str, ... )
 {
     ASSERT( node != NULL, 0 );
 
     const char* tempDotFileName = "temp_graph_viz_tree.dot"; 
-    FILE*       tempDotFile = DiffCreateDotDumpFile( node, tempDotFileName );
+    FILE*       tempDotFile = LngCreateDotDumpFile( node, tempDotFileName );
     fclose(     tempDotFile     );
 
     static int dumpNum = 0;
