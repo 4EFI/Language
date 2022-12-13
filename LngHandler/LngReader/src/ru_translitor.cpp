@@ -168,133 +168,133 @@ char* TranslitString( const char* src, int size )
                 translit++;
                 break;
             case ABRUS:
-                *translit = 'a';
+                *translit = 'A';
                 translit++;
                 break;
             case BBRUS:
-                *translit = 'b';
+                *translit = 'B';
                 translit++;
                 break;
             case VBRUS:
-                *translit = 'v';
+                *translit = 'V';
                 translit++;
                 break;
             case GBRUS:
-                *translit = 'g';
+                *translit = 'G';
                 translit++;
                 break;
             case DBRUS:
-                *translit = 'd';
+                *translit = 'D';
                 translit++;
                 break;
             case EBRUS:
-                *translit = 'e';
+                *translit = 'E';
                 translit++;
                 break;
             case ZHBRUS:
-                *translit = 'z';
+                *translit = 'Z';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
                 break;
             case ZBRUS:
-                *translit = 'z';
+                *translit = 'Z';
                 translit++;
                 break;
             case IBRUS:
-                *translit = 'i';
+                *translit = 'I';
                 translit++;
                 break;
             case YIBRUS:
-                *translit = 'i';
+                *translit = 'I';
                 translit++;
                 break;
             case KBRUS:
-                *translit = 'k';
+                *translit = 'K';
                 translit++;
                 break;
             case LBRUS:
-                *translit = 'l';
+                *translit = 'L';
                 translit++;
                 break;
             case MBRUS:
-                *translit = 'm';
+                *translit = 'M';
                 translit++;
                 break;
             case NBRUS:
-                *translit = 'n';
+                *translit = 'N';
                 translit++;
                 break;
             case OBRUS:
-                *translit = 'o';
+                *translit = 'O';
                 translit++;
                 break;
             case PBRUS:
-                *translit = 'p';
+                *translit = 'P';
                 translit++;
                 break;
             case RBRUS:
-                *translit = 'r';
+                *translit = 'R';
                 translit++;
                 break;
             case SBRUS:
-                *translit = 's';
+                *translit = 'S';
                 translit++;
                 break;
             case TBRUS:
-                *translit = 't';
+                *translit = 'T';
                 translit++;
                 break;
             case UBRUS:
-                *translit = 'u';
+                *translit = 'U';
                 translit++;
                 break;
             case FBRUS:
-                *translit = 'f';
+                *translit = 'F';
                 translit++;
                 break;
             case HBRUS:
-                *translit = 'k';
+                *translit = 'K';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
                 break;
             case TSBRUS:
-                *translit = 't';
+                *translit = 'T';
                 translit++;
-                *translit = 's';
+                *translit = 'S';
                 translit++;
                 break;
             case CHBRUS:
-                *translit = 'c';
+                *translit = 'C';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
                 break;
             case SHBRUS:
-                *translit = 's';
+                *translit = 'S';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
                 break;
             case SHCHBRUS:
-                *translit = 's';
+                *translit = 'S';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
-                *translit = 'c';
+                *translit = 'C';
                 translit++;
-                *translit = 'h';
+                *translit = 'H';
                 translit++;
                 break;
             case IEBRUS:
-                *translit = 'i';
+                *translit = 'I';
                 translit++;
-                *translit = 'e';
+                *translit = 'E';
                 translit++;
                 break;
             case YBRUS:
-                *translit = 'y';
+                *translit = 'Y';
                 translit++;
                 break;
             case QBRUS:
@@ -302,19 +302,19 @@ char* TranslitString( const char* src, int size )
                 translit++;
                 break;
             case EEBRUS:
-                *translit = 'e';
+                *translit = 'E';
                 translit++;
                 break;
             case IUBRUS:
-                *translit = 'i';
+                *translit = 'I';
                 translit++;
-                *translit = 'u';
+                *translit = 'U';
                 translit++;
                 break;
             case IABRUS:
-                *translit = 'i';
+                *translit = 'I';
                 translit++;
-                *translit = 'a';
+                *translit = 'A';
                 translit++;
                 break;
             default:

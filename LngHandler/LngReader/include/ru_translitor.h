@@ -29,7 +29,7 @@ enum RussianSymb // Thanks @aleksplast for that very much
     CHRUS    = -121,
     SHRUS    = -120,
     SHCHRUS  = -119,
-    IERUS    = -118,
+    IERUS    = -118, 
     YRUS     = -117,
     QRUS     = -116,
     EERUS    = -115,
