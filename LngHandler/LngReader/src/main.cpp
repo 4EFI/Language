@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <locale.h>
 
+#include "ru_translitor.h"
 #include "tree_lng.h"
 #include "lng_reader.h"
 #include "file_algs.h"
@@ -19,7 +20,7 @@ int main()
     char* lngData = NULL;
     ReadAllFile( file, &lngData );
     
-    LOG( "%s", lngData );
+    LOG( "%s", TranslitString( "Владос", 7 ) );
 
     // Node* lngNode = GetGrammar(  );
 }
