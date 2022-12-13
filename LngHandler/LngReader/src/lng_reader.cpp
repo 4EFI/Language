@@ -1,41 +1,37 @@
 
 #include "lng_reader.h"
+
 #include "dsl.h"
-#include "assert.h"
 #include "my_assert.h"
 #include "tree_lng.h"
 #include "tree_lng_dump.h"
 #include "LOG.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <assert.h>
 
 //-----------------------------------------------------------------------------
 
 Node* LngTokenization( const char* str )
 {
-	ASSERT(  );
-}
+	ASSERT( str != NULL, NULL );
 
-Node* LoadDiffDataTree( const char* diffDataTree )
-{
-    ASSERT( diffDataTree != NULL, 0 );
-
-    char* str = ( char* )diffDataTree;
-
-    Node* node = GetG( &str );
-    LinkNodeParents( node, NULL );
-
-    return node;
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
 
 Node* GetGrammar( char** str )
 {   
-    Node* node = GetE( str );
+	char* str_ptr = ( char* )(*str);
 
-	assert( **str == '\0' );
+    Node* node = GetExpression( &str_ptr );
+	LinkNodeParents( node, NULL );
+
+	assert( *str_ptr == '\0' );
 
 	return node;
 }
@@ -44,15 +40,15 @@ Node* GetGrammar( char** str )
 
 Node* GetExpression( char** str )
 {
-	Node* node = GetT( str );
+	Node* node = GetMulDiv( str );
 
 	while( **str == '+' || **str == '-' )
 	{
 		char op = **str;
 		(*str)++;
 
-		Node* nodeR = GetT( str );
-		Node* nodeL = CopyNode( node );	
+		Node* nodeR = GetMulDiv( str );
+		Node* nodeL = CopyLngNode( node );	
 
 		if( op == '+' )
         {        
@@ -79,7 +75,7 @@ Node* GetMulDiv( char** str )
 		(*str)++;
 
 		Node* nodeR = GetPower( str );
-		Node* nodeL = CopyNode( node );	
+		Node* nodeL = CopyLngNode( node );	
 
 		if( op == '*' )
         {
@@ -105,7 +101,7 @@ Node* GetPower( char** str )
 		(*str)++;
 
 		Node* nodeR = GetPower( str );
-		Node* nodeL = CopyNode( node );	
+		Node* nodeL = CopyLngNode( node );	
 
 		node = POW( nodeL, nodeR );
 	}
@@ -121,7 +117,7 @@ Node* GetBracket( char** str )
 	{
 		(*str)++;
 		
-		Node* node = GetE( str );
+		Node* node = GetExpression( str );
 		
 		assert( **str == ')' );
 		(*str)++;
