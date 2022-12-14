@@ -27,7 +27,10 @@ Node* GetLngTree( const char* str )
 
 	LngGraphDumpNodes( nodes );
 
-	return nodes->data[0];
+	int curPos;
+	Node* node = GetGrammar( nodes, &curPos );
+
+	return node;
 }
 
 //-----------------------------------------------------------------------------
@@ -78,6 +81,8 @@ Stack* LngTokenization( const char* str )
 		str_ptr += numReadSyms; 
 	}
 
+	StackPush( stk, CREATE_TYPE_NODE( END_RROG_TYPE ) );
+
 	return stk;
 }
 
@@ -87,33 +92,31 @@ Stack* LngTokenization( const char* str )
 //	Recursive descent 
 //-----------------------------------------------------------------------------
 
-Node* GetGrammar( char** str )
+Node* GetGrammar( Stack* nodes, int* curPos )
 {   
-	char* str_ptr = ( char* )(*str);
-
-    Node* node = GetExpression( &str_ptr );
+    Node* node = GetExpression( nodes, curPos );
 	LinkNodeParents( node, NULL );
 
-	assert( *str_ptr == '\0' );
+	assert( CUR_NODE_TYPE == END_RROG_TYPE );
 
 	return node;
 }
 
 //-----------------------------------------------------------------------------
 
-Node* GetExpression( char** str )
+Node* GetExpression( Stack* nodes, int* curPos )
 {
-	Node* node = GetMulDiv( str );
+	Node* node = GetMulDiv( nodes, curPos );
 
-	while( **str == '+' || **str == '-' )
+	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_ADD || CUR_NODE_OP == OP_SUB ) ) // + or -
 	{
-		char op = **str;
-		(*str)++;
+		int op = CUR_NODE_OP;
+		(*curPos)++;
 
-		Node* nodeR = GetMulDiv( str );
+		Node* nodeR = GetMulDiv( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
 
-		if( op == '+' )
+		if( op == OP_ADD )
         {        
             node = ADD( nodeL, nodeR );
         }
@@ -128,19 +131,19 @@ Node* GetExpression( char** str )
 
 //-----------------------------------------------------------------------------
 
-Node* GetMulDiv( char** str )
+Node* GetMulDiv( Stack* nodes, int* curPos )
 {
-	Node* node = GetPower( str );
+	Node* node = GetPower( nodes, curPos );
 
-	while( **str == '*' || **str == '/' )
+	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_MUL || CUR_NODE_OP == OP_DIV ) ) // * or /
 	{
-		char op = **str;
-		(*str)++;
+		int op = CUR_NODE_OP;
+		(*curPos)++;
 
-		Node* nodeR = GetPower( str );
+		Node* nodeR = GetPower( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
 
-		if( op == '*' )
+		if( op == OP_MUL )
         {
 			node = MUL( nodeL, nodeR );
         }
@@ -155,15 +158,15 @@ Node* GetMulDiv( char** str )
 
 //-----------------------------------------------------------------------------
 
-Node* GetPower( char** str )
+Node* GetPower( Stack* nodes, int* curPos )
 {
-	Node* node = GetBracket( str );
+	Node* node = GetBracket( nodes, curPos );
 
-	if( **str == '^' ) 
+	if( CUR_NODE_TYPE == OP_TYPE && CUR_NODE_OP == OP_DEG ) // ^ 
 	{
-		(*str)++;
+		(*curPos)++;
 
-		Node* nodeR = GetPower( str );
+		Node* nodeR = GetPower( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
 
 		node = POW( nodeL, nodeR );
@@ -174,109 +177,59 @@ Node* GetPower( char** str )
 
 //-----------------------------------------------------------------------------
 
-Node* GetBracket( char** str )
+Node* GetBracket( Stack* nodes, int* curPos )
 {	
-	if( **str == '(' )
+	if( CUR_NODE_TYPE == L_BRACKET_TYPE )
 	{
-		(*str)++;
+		(*curPos)++;
 		
-		Node* node = GetExpression( str );
+		Node* node = GetExpression( nodes, curPos );
 		
-		assert( **str == ')' );
-		(*str)++;
+		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
+		(*curPos)++;
 
 		return node;
 	}
     
-    return GetStrMathsFunc( str );
+    return GetStrMathsFunc( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
 
-Node* GetStrMathsFunc( char** str )
+Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 {
-	int op  = IsStrMathsFunc( str );
-	if( op != -1 )
-	{
-		Node* nodeR = GetBracket( str ); 
-		
-		switch( op )
-		{
-			case OP_SIN: return SIN( NULL, nodeR );
-			case OP_COS: return COS( NULL, nodeR );
-			case OP_LN:  return LN ( NULL, nodeR );
-		}
-	}
+	if( CUR_NODE_TYPE != OP_TYPE ) return GetVar( nodes, curPos );
+
+	Node* nodeR = GetBracket( nodes, curPos ); 
 	
-    return GetVar( str );
+	switch( CUR_NODE_OP )
+	{
+		case OP_SIN: return SIN( NULL, nodeR );
+		case OP_COS: return COS( NULL, nodeR );
+		case OP_LN:  return LN ( NULL, nodeR );
+	}
+
+	return GetVar( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
 
-int IsStrMathsFunc( char** str )
-{
-	if/* */( **str == 's' && *(*str + 1) == 'i' && *(*str + 2) == 'n' )
-	{
-		*str += 3;
-		return OP_SIN;
-	}
-	else if( **str == 'c' && *(*str + 1) == 'o' && *(*str + 2) == 's' )
-	{
-		*str += 3;
-		return OP_COS;
-	}
-	else if( **str == 'l' && *(*str + 1) == 'n' )
-	{
-		*str += 2;
-		return OP_LN;
-	}
-
-	return -1;
-}
-
-//-----------------------------------------------------------------------------
-
-Node* GetVar( char** str )
+Node* GetVar( Stack* nodes, int* curPos )
 {	
-	if( isalpha( **str ) )
-	{        
-		char* var    = ( char* )calloc( MaxStrLen, sizeof( char ) );
-		char* oldStr = *str;
-				
-		int i = 0;	
-		while( isalpha(**str) && i < MaxStrLen )
-		{
-			var[i] = **str;
-			(*str)++;
-			
-            i++;	
-		}
-		
-		assert( oldStr != *str );
-
-		return CREATE_VAR_NODE( var );;
-	}
+	if( CUR_NODE_TYPE == VAR_TYPE ) return CUR_NODE;
 	
-	return GetNumber( str );
+	return GetNumber( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
 
-Node* GetNumber( char** str )
+Node* GetNumber( Stack* nodes, int* curPos )
 {
-	double val   = 0;
-
-    const char* sOld = *str;
+	assert( CUR_NODE_TYPE == VAL_TYPE );
 	
-    while( '0' <= **str && **str <= '9' )
-    {
-        val = val * 10 + (**str) - '0';
-        (*str)++; 
-    }
+	(*curPos)++;
 
-	assert( *str != sOld );
-	
-	return CREATE_VAL_NODE( val );
+	return CUR_NODE;
 }
 
 // End recursive descent
