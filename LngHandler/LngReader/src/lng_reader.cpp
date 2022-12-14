@@ -27,8 +27,10 @@ Node* GetLngTree( const char* str )
 
 	LngGraphDumpNodes( nodes );
 
-	int curPos;
+	int curPos = 0;
 	Node* node = GetGrammar( nodes, &curPos );
+
+	LngGraphDumpTree( node );
 
 	return node;
 }
@@ -49,6 +51,7 @@ Stack* LngTokenization( const char* str )
 
 		double num = 0;
 		int isNum = sscanf( str_ptr, "%lf%n", &num, &numReadSyms ); 
+		if( isNum == -1 ) break;
 
 		if( isNum )
 		{
@@ -95,10 +98,10 @@ Stack* LngTokenization( const char* str )
 Node* GetGrammar( Stack* nodes, int* curPos )
 {   
     Node* node = GetExpression( nodes, curPos );
-	LinkNodeParents( node, NULL );
 
 	assert( CUR_NODE_TYPE == END_RROG_TYPE );
 
+	LinkNodeParents( node, NULL );
 	return node;
 }
 
@@ -178,15 +181,19 @@ Node* GetPower( Stack* nodes, int* curPos )
 //-----------------------------------------------------------------------------
 
 Node* GetBracket( Stack* nodes, int* curPos )
-{	
+{		
 	if( CUR_NODE_TYPE == L_BRACKET_TYPE )
-	{
+	{				
 		(*curPos)++;
+
+		LOG( "(" );
 		
 		Node* node = GetExpression( nodes, curPos );
 		
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
 		(*curPos)++;
+
+		LOG( ")" );
 
 		return node;
 	}
@@ -197,12 +204,16 @@ Node* GetBracket( Stack* nodes, int* curPos )
 //-----------------------------------------------------------------------------
 
 Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
-{
+{	
 	if( CUR_NODE_TYPE != OP_TYPE ) return GetVar( nodes, curPos );
 
-	Node* nodeR = GetBracket( nodes, curPos ); 
+	int op = CUR_NODE_OP;
 	
-	switch( CUR_NODE_OP )
+	(*curPos)++;
+
+	Node* nodeR = GetBracket( nodes, curPos );
+	
+	switch( op )
 	{
 		case OP_SIN: return SIN( NULL, nodeR );
 		case OP_COS: return COS( NULL, nodeR );
@@ -216,7 +227,9 @@ Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 
 Node* GetVar( Stack* nodes, int* curPos )
 {	
-	if( CUR_NODE_TYPE == VAR_TYPE ) return CUR_NODE;
+	Node* node = CUR_NODE;
+	
+	if( CUR_NODE_TYPE == VAR_TYPE ) { (*curPos)++; return node; }
 	
 	return GetNumber( nodes, curPos );
 }
@@ -226,10 +239,14 @@ Node* GetVar( Stack* nodes, int* curPos )
 Node* GetNumber( Stack* nodes, int* curPos )
 {
 	assert( CUR_NODE_TYPE == VAL_TYPE );
+
+	Node* node = CUR_NODE;
 	
+	LOG( "num: %g", CUR_NODE->value->dblValue );
+
 	(*curPos)++;
 
-	return CUR_NODE;
+	return node;
 }
 
 // End recursive descent
