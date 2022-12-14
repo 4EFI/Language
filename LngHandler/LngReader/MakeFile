@@ -3,12 +3,13 @@
 
 SRC =    src/main.cpp          \
 		 src/lng_reader.cpp    \
-		 src/ru_translitor.cpp \
+	  ../src/ru_translitor.cpp \
  	  ../src/tree_lng.cpp      \
 	  ../src/tree_lng_dump.cpp \
 	  ../src/str_algs.cpp      \
    	  ../src/file_algs.cpp     \
-   	  ../src/stack.cpp
+   	  ../src/stack.cpp         \
+	  ../src/lng_tools.cpp
 
 # already compiled objects
 OBJ = ../LOG/lib/LOG.o 

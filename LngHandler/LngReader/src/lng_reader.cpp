@@ -8,6 +8,8 @@
 #include "tree_lng_dump.h"
 #include "LOG.h"
 #include "stack.h"
+#include "lng_tools.h"
+#include "ru_translitor.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,30 +32,6 @@ Node* GetLngTree( const char* str )
 
 //-----------------------------------------------------------------------------
 
-int GetNumOperation( const char* str )
-{
-	ASSERT( str != NULL, -1 );
-
-	for( int i = 0; i < NumOpStrings; i++ )
-    {
-        if( strcmp( str, OpStrings[i].str ) == 0 )
-        {
-            return OpStrings[i].opNum;
-        }
-    }	
-
-	return -1;
-}
-
-int GetNumType( const char* str )
-{
-	ASSERT( str != NULL, -1 );
-
-
-
-	return -1;
-}
-
 Stack* LngTokenization( const char* str )
 {
 	ASSERT( str != NULL, NULL );
@@ -71,19 +49,30 @@ Stack* LngTokenization( const char* str )
 
 		if( isNum )
 		{
-			LOG( "%d: lf = %lf; %d", isNum, num, numReadSyms );
-
 			StackPush( stk, CREATE_VAL_NODE( num ) );
 		}
 		else
 		{
-			char strType[ MaxStrLen ] = "";
+			char* strType = ( char* )calloc( MaxStrLen, sizeof( char ) );
 
-			int isStr = sscanf( str_ptr, "%s%n", strType, &numReadSyms );
-
-			LOG( "%d: s = '%s' %d", isStr, strType, numReadSyms );
-
+			int  isStr = sscanf( str_ptr, "%s%n", strType, &numReadSyms );
 			if( !isStr ) break;
+
+			int opType = -1;
+			int type   = GetType( strType, &opType );
+
+			if/* */( type == OP_TYPE )
+			{
+				StackPush( stk, CREATE_OP_NODE( opType, NULL, NULL ) );	
+			}
+			else if( type == -1 )
+			{					
+				StackPush( stk, CREATE_VAR_NODE( TranslitString( strType, strlen( strType ) ) ) );
+			}
+			else
+			{
+				StackPush( stk, CREATE_TYPE_NODE( type ) );
+			}
 		}
 
 		str_ptr += numReadSyms; 
