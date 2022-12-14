@@ -32,6 +32,10 @@ int NodeDtor( Node* node );
 
 Node* CreateLngNode( int type, double dbl, int op, char* var = NULL, Node* left = NULL, Node* right = NULL, Node* parent = NULL );
 
+Node* CopyLngNode( const Node* node );
+
+int LinkNodeParents( Node* node, Node* parent );
+
 Node* TreeSetNodeValue( Node* node, TreeElem_t val );
 Node* TreeAddChild    ( Node* node, TreeElem_t val, int side );
 

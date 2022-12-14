@@ -36,6 +36,8 @@
 
 #define CREATE_OP_NODE( OP, L, R ) CreateLngNode( OP_TYPE, 0, OP, NULL, L, R )
 
+#define CREATE_TYPE_NODE( TYPE ) CreateLngNode( TYPE, 0, -1, NULL )
+
 // +
 #define ADD( L, R ) CREATE_OP_NODE( OP_ADD, L, R )
 // -

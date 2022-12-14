@@ -49,6 +49,54 @@ Node* CreateLngNode( int type, double dbl, int op, char* var, Node* left, Node* 
     return newNode;
 }
 
+Node* CopyLngNode( const Node* node )
+{
+    ASSERT( node != NULL, 0 );
+
+    Node* newNode = ( Node* )calloc( 1, sizeof( Node ) );
+
+    newNode->value = ( LngNode* )calloc( 1, sizeof( LngNode ) );
+
+    memmove( newNode,        node,        sizeof(    Node ) );
+    memmove( newNode->value, node->value, sizeof( LngNode ) );
+
+    if( node->left )
+    {
+        newNode->left = CopyLngNode( node->left );
+        newNode->left->parent = newNode; 
+    }
+
+    if( node->right )
+    {
+        newNode->right = CopyLngNode( node->right );
+        newNode->right->parent = newNode; 
+    }
+
+    return newNode;
+}
+
+//-----------------------------------------------------------------------------
+
+int LinkNodeParents( Node* node, Node* parent )
+{
+    ASSERT( node != NULL, 0 );
+
+    node->parent = parent;
+
+    if( node->left )
+    {
+        LinkNodeParents( node->left, node );
+    }
+    
+    if( node->right )
+    {
+        LinkNodeParents( node->right, node );
+    }
+
+    return 1; 
+}
+
+//-----------------------------------------------------------------------------
 
 int NodeDtor( Node* node )
 {
