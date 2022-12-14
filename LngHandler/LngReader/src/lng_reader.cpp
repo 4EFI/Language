@@ -36,11 +36,28 @@ Node* LngTokenization( const char* str )
 
 	while( *str_ptr != '\0' )
 	{
-		str_ptr++;
+		int numReadSyms = 0;
 
-		// ТОКЕНИЗАЦИИИЯЯЯЯ!!
+		double num = 0;
+		int isNum = sscanf( str_ptr, "%lf%n", &num, &numReadSyms ); 
+
+		if( isNum )
+		{
+			LOG( "%d: lf = %lf; %d", isNum, num, numReadSyms );
+		}
+		else
+		{
+			char strType[ MaxStrLen ] = "";
+
+			int isStr = sscanf( str_ptr, "%s%n", strType, &numReadSyms );
+
+			LOG( "%d: s = '%s' %d", isStr, strType, numReadSyms );
+
+			if( !isStr ) break;
+		}
+
+		str_ptr += numReadSyms; 
 	}
-	
 
 	Node* node = NULL;
 
