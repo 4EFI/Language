@@ -4,6 +4,7 @@
 
 #include "ru_translitor.h"
 #include "tree_lng.h"
+#include "tree_lng_dump.h"
 #include "lng_reader.h"
 #include "file_algs.h"
 #include "LOG.h"
@@ -19,8 +20,8 @@ int main()
 
     char* lngData = NULL;
     ReadAllFile( file, &lngData );
-    
-    LOG( "%s", TranslitString( "Владос", 7 ) );
 
-    // Node* lngNode = GetGrammar(  );
+    Node* lngNode = GetLngTree( lngData );
+
+    LngGraphDump( lngNode );
 }

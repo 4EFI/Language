@@ -3,6 +3,9 @@
 
 struct Node;
 
+Node* GetLngTree     ( const char* str );
+Node* LngTokenization( const char* str );
+
 Node* GetGrammar     ( char** str );
 Node* GetExpression  ( char** str );
 Node* GetMulDiv      ( char** str );

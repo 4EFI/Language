@@ -15,13 +15,42 @@
 
 //-----------------------------------------------------------------------------
 
+Node* GetLngTree( const char* str )
+{
+	ASSERT( str != NULL, NULL );
+
+	Node* node = LngTokenization( str );
+
+	return node;
+}
+
+//-----------------------------------------------------------------------------
+
+
+
 Node* LngTokenization( const char* str )
 {
 	ASSERT( str != NULL, NULL );
 
-	return 0;
+	char* str_ptr = ( char* )str;
+
+	while( *str_ptr != '\0' )
+	{
+		str_ptr++;
+
+		// ТОКЕНИЗАЦИИИЯЯЯЯ!!
+	}
+	
+
+	Node* node = NULL;
+
+	return node;
 }
 
+//-----------------------------------------------------------------------------
+
+
+//	Recursive descent 
 //-----------------------------------------------------------------------------
 
 Node* GetGrammar( char** str )
@@ -216,4 +245,5 @@ Node* GetNumber( char** str )
 	return CREATE_VAL_NODE( val );
 }
 
+// End recursive descent
 //-----------------------------------------------------------------------------
