@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "lng_reader.h"
 
 #include "dsl.h"
@@ -26,7 +27,29 @@ Node* GetLngTree( const char* str )
 
 //-----------------------------------------------------------------------------
 
+int GetNumOperation( const char* str )
+{
+	ASSERT( str != NULL, -1 );
 
+	for( int i = 0; i < NumOpStrings; i++ )
+    {
+        if( strcmp( str, OpStrings[i].str ) == 0 )
+        {
+            return OpStrings[i].opNum;
+        }
+    }	
+
+	return -1;
+}
+
+int GetNumType( const char* str )
+{
+	ASSERT( str != NULL, -1 );
+
+
+
+	return -1;
+}
 
 Node* LngTokenization( const char* str )
 {
@@ -35,7 +58,7 @@ Node* LngTokenization( const char* str )
 	char* str_ptr = ( char* )str;
 
 	while( *str_ptr != '\0' )
-	{
+	{	
 		int numReadSyms = 0;
 
 		double num = 0;

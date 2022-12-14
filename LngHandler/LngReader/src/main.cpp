@@ -23,5 +23,5 @@ int main()
 
     Node* lngNode = GetLngTree( lngData );
 
-    LngGraphDump( lngNode );
+    LngGraphDumpTree( lngNode );
 }
