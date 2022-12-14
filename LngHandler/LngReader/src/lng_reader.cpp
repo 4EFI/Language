@@ -7,6 +7,7 @@
 #include "tree_lng.h"
 #include "tree_lng_dump.h"
 #include "LOG.h"
+#include "stack.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,9 +21,11 @@ Node* GetLngTree( const char* str )
 {
 	ASSERT( str != NULL, NULL );
 
-	Node* node = LngTokenization( str );
+	Stack* nodes = LngTokenization( str );
 
-	return node;
+	LngGraphDumpNodes( nodes );
+
+	return nodes->data[0];
 }
 
 //-----------------------------------------------------------------------------
@@ -51,12 +54,14 @@ int GetNumType( const char* str )
 	return -1;
 }
 
-Node* LngTokenization( const char* str )
+Stack* LngTokenization( const char* str )
 {
 	ASSERT( str != NULL, NULL );
 
-	char* str_ptr = ( char* )str;
+	Stack*     stk = ( Stack* )calloc( 1, sizeof( Stack ) );
+	StackCtor( stk, 1 );
 
+	char*   str_ptr = ( char* )str;
 	while( *str_ptr != '\0' )
 	{	
 		int numReadSyms = 0;
@@ -67,6 +72,8 @@ Node* LngTokenization( const char* str )
 		if( isNum )
 		{
 			LOG( "%d: lf = %lf; %d", isNum, num, numReadSyms );
+
+			StackPush( stk, CREATE_VAL_NODE( num ) );
 		}
 		else
 		{
@@ -82,9 +89,7 @@ Node* LngTokenization( const char* str )
 		str_ptr += numReadSyms; 
 	}
 
-	Node* node = NULL;
-
-	return node;
+	return stk;
 }
 
 //-----------------------------------------------------------------------------

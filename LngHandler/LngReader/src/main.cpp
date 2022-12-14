@@ -22,6 +22,4 @@ int main()
     ReadAllFile( file, &lngData );
 
     Node* lngNode = GetLngTree( lngData );
-
-    LngGraphDumpTree( lngNode );
 }

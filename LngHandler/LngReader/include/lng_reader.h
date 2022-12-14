@@ -4,9 +4,10 @@
 //-----------------------------------------------------------------------------
 
 struct Node;
+struct Stack;
 
-Node* GetLngTree     ( const char* str );
-Node* LngTokenization( const char* str );
+Node*  GetLngTree     ( const char* str );
+Stack* LngTokenization( const char* str );
 
 Node* GetGrammar     ( char** str );
 Node* GetExpression  ( char** str );
