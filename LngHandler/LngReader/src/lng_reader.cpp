@@ -97,12 +97,70 @@ Stack* LngTokenization( const char* str )
 
 Node* GetGrammar( Stack* nodes, int* curPos )
 {   
-    Node* node = GetExpression( nodes, curPos );
+   	Node* node = GetStatememt( nodes, curPos );
+	
+	// Node* node = GetExpression( nodes, curPos );
+
+	LOG( "%d", *curPos );
 
 	assert( CUR_NODE_TYPE == END_RROG_TYPE );
 
 	LinkNodeParents( node, NULL );
 	return node;
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetStatememt( Stack* nodes, int* curPos )
+{
+	Node* node    = NULL;
+	Node* oldNode = NULL;
+	Node* retNode = NULL;
+	
+	while( CUR_NODE_TYPE == VAR_INIT_TYPE )
+	{
+		node = CREATE_TYPE_NODE( ST_TYPE );
+
+		if( !retNode ) retNode = node;
+
+		int op = CUR_NODE_TYPE;
+		(*curPos)++;
+
+		Node* nodeL = NULL;
+
+		if( op == VAR_INIT_TYPE ) 
+		{
+			nodeL = GetInitVar( nodes, curPos );	
+		}
+
+		node->left = nodeL;
+
+		if( oldNode != NULL ) oldNode->right = node;
+
+		oldNode = node;
+	}
+		
+	assert( retNode != NULL );
+	return  retNode;
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetInitVar( Stack* nodes, int* curPos )
+{
+	assert( CUR_NODE_TYPE == VAR_TYPE );
+	
+	Node* nodeL = CUR_NODE;
+	(*curPos)++;
+
+	LOG( "%d", *curPos );
+
+	assert( CUR_NODE_TYPE == EQ_TYPE );
+	(*curPos)++;
+	
+	Node* nodeR = GetExpression( nodes, curPos );
+
+	return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
 }
 
 //-----------------------------------------------------------------------------
@@ -169,7 +227,7 @@ Node* GetPower( Stack* nodes, int* curPos )
 	{
 		(*curPos)++;
 
-		Node* nodeR = GetPower( nodes, curPos );
+		Node* nodeR = GetBracket( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
 
 		node = POW( nodeL, nodeR );

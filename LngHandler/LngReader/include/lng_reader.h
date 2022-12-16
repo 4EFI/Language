@@ -10,6 +10,8 @@ Node*  GetLngTree     ( const char* str );
 Stack* LngTokenization( const char* str );
 
 Node* GetGrammar     ( Stack* nodes, int* curPos );
+Node* GetStatememt   ( Stack* nodes, int* curPos );
+Node* GetInitVar     ( Stack* nodes, int* curPos );
 Node* GetExpression  ( Stack* nodes, int* curPos );
 Node* GetMulDiv      ( Stack* nodes, int* curPos );
 Node* GetPower       ( Stack* nodes, int* curPos );
