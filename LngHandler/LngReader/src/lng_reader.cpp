@@ -98,10 +98,6 @@ Stack* LngTokenization( const char* str )
 Node* GetGrammar( Stack* nodes, int* curPos )
 {   
    	Node* node = GetStatememt( nodes, curPos );
-	
-	// Node* node = GetAddSub( nodes, curPos );
-
-	LOG( "%d", *curPos );
 
 	assert( CUR_NODE_TYPE == END_RROG_TYPE );
 
@@ -113,58 +109,42 @@ Node* GetGrammar( Stack* nodes, int* curPos )
 
 Node* GetStatememt( Stack* nodes, int* curPos )
 {
-	Node* node    = NULL;
-	Node* oldNode = NULL;
-	Node* retNode = NULL;
-	
-	while( CUR_NODE_TYPE == VAR_INIT_TYPE || 
-		   CUR_NODE_TYPE == VAR_TYPE )
+	if( CUR_NODE_TYPE == SEMICOLON_TYPE )
 	{
-		node = CREATE_TYPE_NODE( ST_TYPE );
-
-		if( !retNode ) retNode = node;
-
-		int op = CUR_NODE_TYPE;
 		(*curPos)++;
-
-		Node* nodeL = NULL;
-
-		if/* */( op == VAR_INIT_TYPE ) 
-		{
-			nodeL = GetInitVar( nodes, curPos );	
-		}
-		else if( op == VAR_TYPE )
-		{
-			(*curPos)--;
-			nodeL = GetEqual( nodes, curPos );
-		}
-
-		node->left = nodeL;
-
-		if( oldNode != NULL ) oldNode->right = node;
-
-		oldNode = node;
+		GetStatememt( nodes, curPos );
 	}
-		
-	assert( retNode != NULL );
-	return  retNode;
+
+	if( CUR_NODE_TYPE == END_RROG_TYPE ) return NULL;
+
+	Node* nodeL = GetInitVar  ( nodes, curPos );
+	Node* nodeR = GetStatememt( nodes, curPos );
+	
+	return CREATE_TYPE_NODE_LR( ST_TYPE, nodeL, nodeR );
 }
 
 //-----------------------------------------------------------------------------
 
 Node* GetInitVar( Stack* nodes, int* curPos )
 {
-	assert( CUR_NODE_TYPE == VAR_TYPE );
+	if( CUR_NODE_TYPE == VAR_INIT_TYPE )
+	{
+		(*curPos)++;
+		assert( CUR_NODE_TYPE == VAR_TYPE );
 	
-	Node* nodeL = CUR_NODE;
-	(*curPos)++;
+		Node* nodeL = CUR_NODE;
+		(*curPos)++;
 
-	assert( CUR_NODE_TYPE == EQ_TYPE );
-	(*curPos)++;
-	
-	Node* nodeR = GetAddSub( nodes, curPos ); 
+		assert( CUR_NODE_TYPE == EQ_TYPE );
+		(*curPos)++;
+		
+		Node* nodeR = GetAddSub( nodes, curPos ); 
 
-	return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
+		return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
+	}
+
+
+	return GetAddSub( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
