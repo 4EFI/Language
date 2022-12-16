@@ -112,7 +112,7 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 	if( CUR_NODE_TYPE == SEMICOLON_TYPE )
 	{
 		(*curPos)++;
-		GetStatememt( nodes, curPos );
+		return GetStatememt( nodes, curPos );
 	}
 
 	if( CUR_NODE_TYPE == END_RROG_TYPE ) return NULL;
@@ -140,9 +140,10 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 		
 		Node* nodeR = GetAddSub( nodes, curPos ); 
 
+		LngGraphDumpTree( nodeR );
+
 		return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
 	}
-
 
 	return GetAddSub( nodes, curPos );
 }
