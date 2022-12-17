@@ -5,7 +5,7 @@
 #include "ru_translitor.h"
 #include "tree_lng.h"
 #include "tree_lng_dump.h"
-#include "lng_reader.h"
+#include "lng_parsing.h"
 #include "file_algs.h"
 #include "LOG.h"
 

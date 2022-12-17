@@ -1,17 +1,19 @@
 
 # makefile data 
 
-SRC = src/main.cpp       \
-	  src/lng_reader.cpp    
+SRC = src/main.cpp            \
+	  src/lng_parsing.cpp     \
+	  src/lng_saving.cpp      \
+	  src/lng_tokenization.cpp   
 
 # already compiled objects
 
 LIBS = ../LOG/lib/LOG.o  $(wildcard ../src/build/*.o)
 
 ifeq ($(OS),Windows_NT)
-	OUTPUT_FILE_NAME = lng_to_nodes.exe
+	OUTPUT_FILE_NAME = lng_to_tree.exe
 else
-    OUTPUT_FILE_NAME = lng_to_nodes
+    OUTPUT_FILE_NAME = lng_to_tree
 endif
 
 CC = g++

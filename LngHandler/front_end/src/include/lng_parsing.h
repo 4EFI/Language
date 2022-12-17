@@ -6,8 +6,7 @@
 struct Node;
 struct Stack;
 
-Node*  GetLngTree     ( const char* str );
-Stack* LngTokenization( const char* str );
+Node* GetLngTree( const char* str );
 
 Node* GetGrammar     ( Stack* nodes, int* curPos );
 Node* GetStatememt   ( Stack* nodes, int* curPos );
