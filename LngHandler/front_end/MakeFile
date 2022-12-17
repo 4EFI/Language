@@ -19,5 +19,5 @@ src/build/%.o : src/%.cpp
 	$(CC) $(IFLAGS) $(CFLAGS) -c $^ -o $@	
 
 clear :
-	rm -f  ./src/build/*.o
+	rm -f ./src/build/*.o
 
