@@ -115,7 +115,7 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 	
 	if( CUR_NODE_TYPE == SEMICOLON_TYPE )
 	{
-		(*curPos)++;
+		NEXT_TOKEN
 		return GetStatememt( nodes, curPos );
 	}
 
@@ -137,14 +137,14 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 	
 	if( CUR_NODE_TYPE == VAR_INIT_TYPE )
 	{
-		(*curPos)++;
+		NEXT_TOKEN
 		assert( CUR_NODE_TYPE == VAR_TYPE );
 	
 		Node* nodeL = CUR_NODE;
-		(*curPos)++;
+		NEXT_TOKEN
 
 		assert( CUR_NODE_TYPE == EQ_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 		
 		Node* nodeR = GetAddSub( nodes, curPos ); 
 
@@ -164,10 +164,10 @@ Node* GetEqual( Stack* nodes, int* curPos )
 	if( CUR_NODE_TYPE == VAR_TYPE )
 	{
 		Node* nodeL = CUR_NODE;
-		(*curPos)++;
+		NEXT_TOKEN
 
 		assert( CUR_NODE_TYPE == EQ_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 
 		Node* nodeR = GetAddSub( nodes, curPos );
 
@@ -186,16 +186,16 @@ Node* GetIf( Stack* nodes, int* curPos )
 	
 	if( CUR_NODE_TYPE == IF_TYPE )
 	{
-		(*curPos)++;
+		NEXT_TOKEN
 		Node* nodeL = GetAddSub( nodes, curPos );
 
 		assert( CUR_NODE_TYPE == L_BRACKET_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 
 		Node* nodeR = GetElse( nodes, curPos );
 
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 
 		return CREATE_TYPE_NODE_LR( IF_TYPE, nodeL, nodeR );
 	}
@@ -210,15 +210,22 @@ Node* GetElse( Stack* nodes, int* curPos )
 	if( CUR_NODE_TYPE == ELSE_TYPE )
 	{
 		assert( CUR_NODE_TYPE == L_BRACKET_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 		
 		return CREATE_TYPE_NODE_LR( ELSE_TYPE, GetStatememt( nodes, curPos ), NULL );	
 
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 	}
 
 	return GetStatememt( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetWhile(  )
+{
+
 }
 
 //-----------------------------------------------------------------------------
@@ -230,7 +237,7 @@ Node* GetAddSub( Stack* nodes, int* curPos )
 	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_ADD || CUR_NODE_OP == OP_SUB ) ) // + or -
 	{
 		int op = CUR_NODE_OP;
-		(*curPos)++;
+		NEXT_TOKEN
 
 		Node* nodeR = GetMulDiv( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
@@ -260,7 +267,7 @@ Node* GetMulDiv( Stack* nodes, int* curPos )
 	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_MUL || CUR_NODE_OP == OP_DIV ) ) // * or /
 	{
 		int op = CUR_NODE_OP;
-		(*curPos)++;
+		NEXT_TOKEN
 
 		Node* nodeR = GetPower( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
@@ -289,7 +296,7 @@ Node* GetPower( Stack* nodes, int* curPos )
 
 	if( CUR_NODE_TYPE == OP_TYPE && CUR_NODE_OP == OP_DEG ) // ^ 
 	{
-		(*curPos)++;
+		NEXT_TOKEN
 
 		Node* nodeR = GetBracket( nodes, curPos );
 		Node* nodeL = CopyLngNode( node );	
@@ -309,14 +316,14 @@ Node* GetBracket( Stack* nodes, int* curPos )
 	
 	if( CUR_NODE_TYPE == L_BRACKET_TYPE )
 	{				
-		(*curPos)++;
+		NEXT_TOKEN
 
 		LOG( "(" );
 		
 		Node* node = GetAddSub( nodes, curPos );
 		
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
-		(*curPos)++;
+		NEXT_TOKEN
 
 		LOG( ")" );
 
@@ -337,7 +344,7 @@ Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 
 	int op = CUR_NODE_OP;
 	
-	(*curPos)++;
+	NEXT_TOKEN
 
 	Node* nodeR = GetBracket( nodes, curPos );
 	
@@ -357,10 +364,10 @@ Node* GetVar( Stack* nodes, int* curPos )
 {	
 	LOG( "Enter GetVar" );
 	LOG( "%d :", *curPos );
-	
+
 	Node* node = CUR_NODE;
 	
-	if( CUR_NODE_TYPE == VAR_TYPE ) { (*curPos)++; return node; }
+	if( CUR_NODE_TYPE == VAR_TYPE ) { NEXT_TOKEN return node; }
 	
 	return GetNumber( nodes, curPos );
 }
@@ -375,10 +382,8 @@ Node* GetNumber( Stack* nodes, int* curPos )
 	if( CUR_NODE_TYPE != VAL_TYPE ) return NULL;
 
 	Node* node = CUR_NODE;
-	
-	LOG( "num: %g", CUR_NODE->value->dblValue );
 
-	(*curPos)++;
+	NEXT_TOKEN
 
 	return node;
 }
