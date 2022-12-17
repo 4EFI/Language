@@ -117,7 +117,7 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 
 	if( CUR_NODE_TYPE == END_RROG_TYPE ) return NULL;
 
-	Node* nodeL = GetInitVar  ( nodes, curPos );
+	Node* nodeL = GetEqual    ( nodes, curPos );
 	Node* nodeR = GetStatememt( nodes, curPos );
 	
 	return CREATE_TYPE_NODE_LR( ST_TYPE, nodeL, nodeR );
@@ -152,17 +152,20 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 
 Node* GetEqual( Stack* nodes, int* curPos )
 {
-	assert( CUR_NODE_TYPE == VAR_TYPE );
-	
-	Node* nodeL = CUR_NODE;
-	(*curPos)++;
+	if( CUR_NODE_TYPE == VAR_TYPE )
+	{
+		Node* nodeL = CUR_NODE;
+		(*curPos)++;
 
-	assert( CUR_NODE_TYPE == EQ_TYPE );
-	(*curPos)++;
-	
-	Node* nodeR = GetAddSub( nodes, curPos ); 
+		assert( CUR_NODE_TYPE == EQ_TYPE );
+		(*curPos)++;
 
-	return CREATE_TYPE_NODE_LR( EQ_TYPE, nodeL, nodeR );
+		Node* nodeR = GetAddSub( nodes, curPos );
+
+		return CREATE_TYPE_NODE_LR( EQ_TYPE, nodeL, nodeR );
+	}
+
+	return GetInitVar( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
