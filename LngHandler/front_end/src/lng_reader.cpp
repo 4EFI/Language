@@ -122,7 +122,7 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 	if( CUR_NODE_TYPE == END_RROG_TYPE || 
 		CUR_NODE_TYPE == R_BRACKET_TYPE ) return NULL;
 
-	Node* nodeL = GetIf       ( nodes, curPos );
+	Node* nodeL = GetWhile    ( nodes, curPos );
 	Node* nodeR = GetStatememt( nodes, curPos );
 	
 	return CREATE_TYPE_NODE_LR( ST_TYPE, nodeL, nodeR );
@@ -212,10 +212,12 @@ Node* GetElse( Stack* nodes, int* curPos )
 		assert( CUR_NODE_TYPE == L_BRACKET_TYPE );
 		NEXT_TOKEN
 		
-		return CREATE_TYPE_NODE_LR( ELSE_TYPE, GetStatememt( nodes, curPos ), NULL );	
+		Node* node = CREATE_TYPE_NODE_LR( ELSE_TYPE, GetStatememt( nodes, curPos ), NULL );	
 
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
 		NEXT_TOKEN
+
+		return node;
 	}
 
 	return GetStatememt( nodes, curPos );
@@ -225,7 +227,24 @@ Node* GetElse( Stack* nodes, int* curPos )
 
 Node* GetWhile( Stack* nodes, int* curPos )
 {
-	// if( CUR_NODE_TYPE ==  )
+	if( CUR_NODE_TYPE == WHILE_TYPE )
+	{
+		NEXT_TOKEN
+		
+		Node* nodeL = GetAddSub( nodes, curPos );
+
+		assert( CUR_NODE_TYPE == L_BRACKET_TYPE ); 
+		NEXT_TOKEN
+
+		Node* nodeR = GetStatememt( nodes, curPos );
+
+		assert( CUR_NODE_TYPE == R_BRACKET_TYPE ); 
+		NEXT_TOKEN
+
+		return CREATE_TYPE_NODE_LR( WHILE_TYPE, nodeL, nodeR );	
+	}
+
+	GetIf( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
