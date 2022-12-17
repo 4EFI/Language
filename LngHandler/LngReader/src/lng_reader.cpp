@@ -109,15 +109,20 @@ Node* GetGrammar( Stack* nodes, int* curPos )
 
 Node* GetStatememt( Stack* nodes, int* curPos )
 {
+	LOG( "Enter GetStatement" );
+	LOG( "%d :", *curPos );
+	LOG( "%d", CUR_NODE_TYPE );
+	
 	if( CUR_NODE_TYPE == SEMICOLON_TYPE )
 	{
 		(*curPos)++;
 		return GetStatememt( nodes, curPos );
 	}
 
-	if( CUR_NODE_TYPE == END_RROG_TYPE ) return NULL;
+	if( CUR_NODE_TYPE == END_RROG_TYPE || 
+		CUR_NODE_TYPE == R_BRACKET_TYPE ) return NULL;
 
-	Node* nodeL = GetEqual    ( nodes, curPos );
+	Node* nodeL = GetIf       ( nodes, curPos );
 	Node* nodeR = GetStatememt( nodes, curPos );
 	
 	return CREATE_TYPE_NODE_LR( ST_TYPE, nodeL, nodeR );
@@ -127,6 +132,9 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 
 Node* GetInitVar( Stack* nodes, int* curPos )
 {
+	LOG( "Enter GetInitVar" );
+	LOG( "%d :", *curPos );
+	
 	if( CUR_NODE_TYPE == VAR_INIT_TYPE )
 	{
 		(*curPos)++;
@@ -140,8 +148,6 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 		
 		Node* nodeR = GetAddSub( nodes, curPos ); 
 
-		LngGraphDumpTree( nodeR );
-
 		return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
 	}
 
@@ -152,6 +158,9 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 
 Node* GetEqual( Stack* nodes, int* curPos )
 {
+	LOG( "Enter GetEqual" );
+	LOG( "%d :", *curPos );
+	
 	if( CUR_NODE_TYPE == VAR_TYPE )
 	{
 		Node* nodeL = CUR_NODE;
@@ -166,6 +175,50 @@ Node* GetEqual( Stack* nodes, int* curPos )
 	}
 
 	return GetInitVar( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetIf( Stack* nodes, int* curPos )
+{
+	LOG( "Enter GetIf" );
+	LOG( "%d :", *curPos );
+	
+	if( CUR_NODE_TYPE == IF_TYPE )
+	{
+		(*curPos)++;
+		Node* nodeL = GetAddSub( nodes, curPos );
+
+		assert( CUR_NODE_TYPE == L_BRACKET_TYPE );
+		(*curPos)++;
+
+		Node* nodeR = GetElse( nodes, curPos );
+
+		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
+		(*curPos)++;
+
+		return CREATE_TYPE_NODE_LR( IF_TYPE, nodeL, nodeR );
+	}
+
+	return GetEqual( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetElse( Stack* nodes, int* curPos )
+{
+	if( CUR_NODE_TYPE == ELSE_TYPE )
+	{
+		assert( CUR_NODE_TYPE == L_BRACKET_TYPE );
+		(*curPos)++;
+		
+		return CREATE_TYPE_NODE_LR( ELSE_TYPE, GetStatememt( nodes, curPos ), NULL );	
+
+		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
+		(*curPos)++;
+	}
+
+	return GetStatememt( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
@@ -199,6 +252,9 @@ Node* GetAddSub( Stack* nodes, int* curPos )
 
 Node* GetMulDiv( Stack* nodes, int* curPos )
 {
+	LOG( "Enter GetMulDiv" );
+	LOG( "%d :", *curPos );
+	
 	Node* node = GetPower( nodes, curPos );
 
 	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_MUL || CUR_NODE_OP == OP_DIV ) ) // * or /
@@ -226,6 +282,9 @@ Node* GetMulDiv( Stack* nodes, int* curPos )
 
 Node* GetPower( Stack* nodes, int* curPos )
 {
+	LOG( "Enter GetPower" );
+	LOG( "%d :", *curPos );
+	
 	Node* node = GetBracket( nodes, curPos );
 
 	if( CUR_NODE_TYPE == OP_TYPE && CUR_NODE_OP == OP_DEG ) // ^ 
@@ -245,6 +304,9 @@ Node* GetPower( Stack* nodes, int* curPos )
 
 Node* GetBracket( Stack* nodes, int* curPos )
 {		
+	LOG( "Enter GetBracket" );
+	LOG( "%d :", *curPos );
+	
 	if( CUR_NODE_TYPE == L_BRACKET_TYPE )
 	{				
 		(*curPos)++;
@@ -268,6 +330,9 @@ Node* GetBracket( Stack* nodes, int* curPos )
 
 Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 {	
+	LOG( "Enter GetStrMathsFunc" );
+	LOG( "%d :", *curPos );
+	
 	if( CUR_NODE_TYPE != OP_TYPE ) return GetVar( nodes, curPos );
 
 	int op = CUR_NODE_OP;
@@ -290,6 +355,9 @@ Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 
 Node* GetVar( Stack* nodes, int* curPos )
 {	
+	LOG( "Enter GetVar" );
+	LOG( "%d :", *curPos );
+	
 	Node* node = CUR_NODE;
 	
 	if( CUR_NODE_TYPE == VAR_TYPE ) { (*curPos)++; return node; }
@@ -301,7 +369,10 @@ Node* GetVar( Stack* nodes, int* curPos )
 
 Node* GetNumber( Stack* nodes, int* curPos )
 {
-	assert( CUR_NODE_TYPE == VAL_TYPE );
+	LOG( "Enter GetNumber" );
+	LOG( "%d :", *curPos );
+	
+	if( CUR_NODE_TYPE != VAL_TYPE ) return NULL;
 
 	Node* node = CUR_NODE;
 	
