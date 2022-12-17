@@ -1,8 +1,7 @@
 
 # makefile data 
 
-SRC = src/main.cpp             \
-	  src/tree_lng_parsing.cpp
+SRC = src/main.cpp   
 
 # already compiled objects
 
