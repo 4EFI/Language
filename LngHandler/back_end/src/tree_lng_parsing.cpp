@@ -110,7 +110,7 @@ Node* LoadLngTree( const char* lngData )
 
     LinkNodeParents( node, NULL );
 
-    return currNode;
+    return currNode->left;
 }
 
 //-----------------------------------------------------------------------------
