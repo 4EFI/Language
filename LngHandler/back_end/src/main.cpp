@@ -28,6 +28,8 @@ int main()
     if(  !asmFile  ) return -1;
 
     TreeToAsm( lngTree, asmFile );
+
+    fprintf( asmFile, "\nout\n" ); // for test !!!! (DELETE IT!!)
 }
 
 //-----------------------------------------------------------------------------

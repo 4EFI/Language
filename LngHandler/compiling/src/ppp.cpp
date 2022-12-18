@@ -15,5 +15,7 @@
 int main()
 {
 	ssystem( "lng_to_tree.exe" );	
+	// remove ( "test.lng.tree" );
 	ssystem( "tree_to_asm.exe" );	
+	ssystem( "asm test.lng.tree.asm" );	
 }
