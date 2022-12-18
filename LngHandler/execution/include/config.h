@@ -9,6 +9,7 @@ static const int NumLabels     = 200;
 static const int RamWidthSize  = 60;
 static const int RamHeightSize = 30; 
 static const int RamSize       = RamWidthSize * RamHeightSize;
+
 #define MaxStrLen 255 
 
 static int NumDumpDividers = 65;
@@ -32,7 +33,7 @@ struct CMD
     unsigned char memory : 1;
 };
 
-#define ON_LOG_FILE
+//#define ON_LOG_FILE
 #define N_STACK_DUMP
 //#define NHASH
 //#define NCANARY

@@ -13,7 +13,7 @@
 
 int main()
 {
-    const char* fileDataName = "../test.lng.tree";
+    const char* fileDataName = "test.lng.tree";
     FILE* file = fopen( fileDataName, "r" ); 
     if(  !file  ) return -1;
 
@@ -24,7 +24,7 @@ int main()
 
     LngGraphDumpTree( lngTree );   
 
-    FILE* asmFile = fopen( "../test.lng.tree.asm", "w" ); 
+    FILE* asmFile = fopen( "test.lng.tree.asm", "w" ); 
     if(  !asmFile  ) return -1;
 
     TreeToAsm( lngTree, asmFile );

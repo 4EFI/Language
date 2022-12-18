@@ -16,7 +16,7 @@ int main()
 {
     setlocale( LC_ALL, ".UTF-8" );
     
-    const char* fileDataName = "../test.lng";
+    const char* fileDataName = "test.lng";
     FILE* file = fopen( fileDataName, "r" ); 
     if(  !file  ) return -1;
 

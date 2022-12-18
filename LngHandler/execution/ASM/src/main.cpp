@@ -22,7 +22,7 @@ int main( int argc, const char* argv[] )
     }
 
     // Set input file
-    if( OpenFile( &fileIn, argv[1], "r" ) ) return -1;
+    if( !OpenFile( &fileIn, argv[1], "r" ) ) return -1;
 
     START_OPT_HANDLER( argc, argv )
     {

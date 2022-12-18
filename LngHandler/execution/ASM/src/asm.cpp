@@ -1,5 +1,5 @@
 
-#include "Config.h"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +54,7 @@ int AsmMakeArrCmds( ASM* asm_s )
     int ip = 0;
     
     for( int i = 0; i < asm_s->text.numLines; i++ )
-    {
+    {        
         char* strForRead = asm_s->text.lines[i].str;
 
         // Check label
@@ -67,10 +67,9 @@ int AsmMakeArrCmds( ASM* asm_s )
         char cmdName[MaxStrLen] = "";
 
         int numReadSyms = 0;
-        sscanf( strForRead, " %n%" STR(MaxStrLen) "s%n", cmdName, &numReadSyms ); // Get command name
+        sscanf( strForRead, " %" STR(MaxStrLen) "s%n", cmdName, &numReadSyms ); // Get command name
 
         if( numReadSyms == 0 ) continue;
-
 
         // Command handler
         CMD* cmd = (CMD*)(&asm_s->code[ip]);
@@ -85,7 +84,7 @@ int AsmMakeArrCmds( ASM* asm_s )
             }                                    \
             else
 
-        #include "Commands.h"
+        #include "commands.h"
         /*else*/
         {
             printf( "Command \"%s\" does not exist...\n", cmdName );
@@ -176,7 +175,6 @@ int AsmArgHandler( ASM* asm_s, const char* strForRead, int* ip )
 
     // Jump value handler
     if( AsmArgJumpHandler( asm_s, strForRead, ip ) ) return 1;
-
 
     // Regs & values handler
     CMD* cmd = (CMD*)(&asm_s->code[(*ip)++]);
