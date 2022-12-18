@@ -19,25 +19,65 @@
 
 //-----------------------------------------------------------------------------
 
+int TreeToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, NULL );    
+    ASSERT( file != NULL, NULL );
+
+    int isAsm = 0;
+
+    isAsm += MathExpressionToAsm( node, file );
+
+    if( isAsm ) return 0;
+    
+    if( node->left  ) TreeToAsm( node->left,  file );
+    if( node->right ) TreeToAsm( node->right, file );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
 int MathExpressionToAsm( Node* node, FILE* file )
 {
     ASSERT( node != NULL, NULL );    
     ASSERT( file != NULL, NULL );
 
-    if( node->right ) MathExpressionToAsm( node->right, file );
-    if( node->left  ) MathExpressionToAsm( node->left,  file );
-
-    if/* */( NODE_TYPE == OP_TYPE ) 
-    {
-        const char* str = OpStrings[ GetIndexOperation( NODE_OP ) ].strAsm;
-        fprintf( file, "%s\n", str );
+    if( NODE_TYPE != OP_TYPE  && 
+        NODE_TYPE != VAR_TYPE && 
+        NODE_TYPE != VAL_TYPE )
+    {   
+        return NULL;
     }
-    else if( NODE_TYPE == VAL_TYPE )
+
+    if( node->left  ) MathExpressionToAsm( node->left,  file );
+    if( node->right ) MathExpressionToAsm( node->right, file );
+
+    switch( NODE_TYPE )
     {
-        fprintf( file, "push %g\n", NODE_VAL );
+        case OP_TYPE:
+        {
+            const char* str = OpStrings[ GetIndexOperation( NODE_OP ) ].strAsm;
+            fprintf( file, "%s\n", str );
+
+            break;
+        }
+
+        case VAL_TYPE:
+        {
+            fprintf( file, "push %g\n", NODE_VAL );
+            break;
+        } 
     }
 
     return 1; 
+}
+
+//-----------------------------------------------------------------------------
+
+int IfToAsm( Node* node, FILE* file )
+{
+
 }
 
 //-----------------------------------------------------------------------------

@@ -7,11 +7,10 @@
 
 struct Node;
 
-int TreeToAsm(  );
+int TreeToAsm( Node* node, FILE* file );
 
 int MathExpressionToAsm( Node* node, FILE* file );
-
-int VarHandler(  );
+int IfToAsm            ( Node* node, FILE* file );
 
 //-----------------------------------------------------------------------------
 

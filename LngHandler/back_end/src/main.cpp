@@ -27,7 +27,7 @@ int main()
     FILE* asmFile = fopen( "../test.lng.tree.asm", "w" ); 
     if(  !asmFile  ) return -1;
 
-    MathExpressionToAsm( lngTree, asmFile );
+    TreeToAsm( lngTree, asmFile );
 }
 
 //-----------------------------------------------------------------------------
