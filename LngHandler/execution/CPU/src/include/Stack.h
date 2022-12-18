@@ -46,7 +46,7 @@ extern const int ResizeDown;
 #endif
 
 // No dump
-#ifndef N_STACK_DUMP 
+#ifdef STACK_DUMP 
     #define ON_STACK_DUMP(...)  __VA_ARGS__
 #else
     #define ON_STACK_DUMP(...)
@@ -83,7 +83,7 @@ struct StackInfo
     bool isStackValid;
 };
 
-struct Stack_t
+struct Stack
 {
     // Canary left protection
     ON_CANARY_PROTECTION ( uint64_t canaryLeft; )
@@ -101,22 +101,22 @@ struct Stack_t
 
 //---------------------------------------------------------------------------
 
-int  _StackCtor (Stack_t* stack, int dataSize, const char* mainFileName, 
+int  _StackCtor (Stack* stack, int dataSize, const char* mainFileName, 
                                                const char* mainFuncName, 
                                                const char* mainStackName);
-int   StackDtor (Stack_t* stack);
-void _StackDump (Stack_t* stack);
+int   StackDtor (Stack* stack);
+void _StackDump (Stack* stack);
 
-uint64_t StackHashProtection (Stack_t* stack);
-uint64_t StackIsValid        (Stack_t* stack); 
+uint64_t StackHashProtection (Stack* stack);
+uint64_t StackIsValid        (Stack* stack); 
 
-int    StackErrHandler (Stack_t* stack);
-int    StackErrPrint   (Stack_t* stack, int indent = 0);
+int    StackErrHandler (Stack* stack);
+int    StackErrPrint   (Stack* stack, int indent = 0);
 
-int    StackResize     (Stack_t* stack, int numResize, int sideResize = ResizeNum);
+int    StackResize     (Stack* stack, int numResize, int sideResize = ResizeNum);
 
-void   StackPush       (Stack_t* stack, Elem_t value);    
-Elem_t StackPop        (Stack_t* stack);
+void   StackPush       (Stack* stack, Elem_t value);    
+Elem_t StackPop        (Stack* stack);
 
 //---------------------------------------------------------------------------
 

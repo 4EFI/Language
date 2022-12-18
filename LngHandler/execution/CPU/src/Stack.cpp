@@ -5,8 +5,8 @@
 #include <malloc.h>
 #include <math.h>
 
-#include "Stack.h"
-#include "Assert.h"
+#include "stack.h"
+#include "my_assert.h"
 #include "LOG.h"
 
 //---------------------------------------------------------------------------
@@ -15,7 +15,7 @@ FILE* StackFileOut = NULL;
 
 //---------------------------------------------------------------------------
 
-const Elem_t   StackDataPoisonValue  = 0x5EEDEAD;
+const Elem_t   StackDataPoisonValue  = (Elem_t)0x5EEDEAD;
 
 const uint64_t StackLeftCanaryValue  = 0xBAADF00D32DEAD32;
 const uint64_t StackRightCanaryValue = 0xD0E0D76BB013927C; 
@@ -37,7 +37,7 @@ const int ResizeDown = -1;
 
 //---------------------------------------------------------------------------
 
-void StackRecalloc (Stack_t* stack, size_t size, uint64_t leftCanary, uint64_t rightCanary);
+void StackRecalloc (Stack* stack, size_t size, uint64_t leftCanary, uint64_t rightCanary);
 
 //---------------------------------------------------------------------------
 
@@ -62,11 +62,11 @@ static const char* ErrorLines[] = {"Data null ptr",
                                    "Left data canary was changed",
                                    "Right data canary was changed"};
 
-int _StackCtor (Stack_t* stack, int dataSize, const char* mainFileName, 
-                                              const char* mainFuncName, 
-                                              const char* mainStackName)
+int _StackCtor (Stack* stack, int dataSize, const char* mainFileName, 
+                                            const char* mainFuncName, 
+                                            const char* mainStackName)
 {   
-    Assert (stack != NULL, 0);
+    ASSERT (stack != NULL, 0);
 
     if (dataSize <= 0) dataSize = 1;
 
@@ -123,9 +123,9 @@ int _StackCtor (Stack_t* stack, int dataSize, const char* mainFileName,
 
 //---------------------------------------------------------------------------
 
-int StackDtor (Stack_t* stack)
+int StackDtor (Stack* stack)
 {
-    Assert (stack != NULL, 0);
+    ASSERT (stack != NULL, 0);
 
     ON_CANARY_PROTECTION
     (
@@ -158,12 +158,12 @@ int StackDtor (Stack_t* stack)
 
 //---------------------------------------------------------------------------
 
-uint64_t StackHashProtection (Stack_t* stack)
+uint64_t StackHashProtection (Stack* stack)
 {   
-    Assert (stack != NULL, 0);
+    ASSERT (stack != NULL, 0);
     
     #ifndef NHASH
-        return HashProtection (stack,       sizeof (Stack_t), stack->info.arrHashIgnorePtr, stack->info.numHashIgnore) +
+        return HashProtection (stack,       sizeof (Stack), stack->info.arrHashIgnorePtr, stack->info.numHashIgnore) +
                HashProtection (stack->data, sizeof (Elem_t) * stack->capacity);
     #else
         return 0;
@@ -172,16 +172,16 @@ uint64_t StackHashProtection (Stack_t* stack)
 
 //---------------------------------------------------------------------------
 
-uint64_t StackIsValid (Stack_t* stack)
+uint64_t StackIsValid (Stack* stack)
 {
     return stack->info.errStatus;
 }
 
 //---------------------------------------------------------------------------
 
-int StackErrHandler (Stack_t* stack)
+int StackErrHandler (Stack* stack)
 {
-    Assert (stack != NULL, -1);
+    ASSERT (stack != NULL, -1);
     
     //stack->info.errStatus = 0;    
     
@@ -245,9 +245,9 @@ int StackErrHandler (Stack_t* stack)
 
 //---------------------------------------------------------------------------
 
-int StackErrPrint (Stack_t* stack, int indent)
+int StackErrPrint (Stack* stack, int indent)
 {
-    Assert (stack != NULL, -1);
+    ASSERT (stack != NULL, -1);
 
     if (!stack->info.errStatus) return 1;
     
@@ -267,7 +267,7 @@ int StackErrPrint (Stack_t* stack, int indent)
 
 //---------------------------------------------------------------------------
 
-void _StackDump (Stack_t* stack)
+void _StackDump (Stack* stack)
 {
     StackErrHandler (stack);
 
@@ -320,13 +320,13 @@ void _StackDump (Stack_t* stack)
                                         isEmpty ? " " : "*", i);
 
                 // Print value                        
-                if(CompareDoubles(double(stack->data[i]), double(StackDataPoisonValue))) 
+                if( stack->data[i] == StackDataPoisonValue ) 
                 {
                     fprintf (StackFileOut, "%s\n", "NAN (POISON)");
                 }
                 else     
                 {   
-                    fprintf (StackFileOut, "%g\n",  double(stack->data[i]));
+                    fprintf (StackFileOut, "%p\n", stack->data[i] );
                 }
             }
         }
@@ -341,9 +341,9 @@ void _StackDump (Stack_t* stack)
 
 //---------------------------------------------------------------------------
 
-int StackResize (Stack_t* stack, int numResize, int sideResize)
+int StackResize (Stack* stack, int numResize, int sideResize)
 {
-    Assert          (stack != NULL, 0); 
+    ASSERT          (stack != NULL, 0); 
     StackErrHandler (stack); 
 
     ON_STACK_DUMP ( StackDump (stack); )
@@ -381,7 +381,7 @@ int StackResize (Stack_t* stack, int numResize, int sideResize)
 
 //---------------------------------------------------------------------------
 
-void StackRecalloc (Stack_t* stack, size_t size, uint64_t leftCanary, uint64_t rightCanary)
+void StackRecalloc (Stack* stack, size_t size, uint64_t leftCanary, uint64_t rightCanary)
 {
     #ifndef NCANARY
         stack->data = (Elem_t*)CanaryRecalloc (stack->data, size, leftCanary, rightCanary); 
@@ -410,9 +410,9 @@ void StackRecalloc (Stack_t* stack, size_t size, uint64_t leftCanary, uint64_t r
 
 //---------------------------------------------------------------------------
 
-void StackPush (Stack_t* stack, Elem_t value)
+void StackPush (Stack* stack, Elem_t value)
 {
-    Assert          (stack != NULL); 
+    ASSERT          (stack != NULL); 
     StackErrHandler (stack);
 
     ON_STACK_DUMP ( StackDump (stack); )
@@ -432,9 +432,9 @@ void StackPush (Stack_t* stack, Elem_t value)
 
 //---------------------------------------------------------------------------
 
-Elem_t StackPop (Stack_t* stack)
+Elem_t StackPop (Stack* stack)
 {
-    Assert          (stack != NULL, StackDataPoisonValue); 
+    ASSERT          (stack != NULL, StackDataPoisonValue); 
     StackErrHandler (stack);
     
     ON_STACK_DUMP ( StackDump (stack); )
@@ -533,7 +533,7 @@ uint64_t HashProtection (void*       arr,
 
 int CanaryDataSet (void* data, size_t size, uint64_t leftCanary, uint64_t rightCanary)
 {   
-    Assert (data != NULL, -1);
+    ASSERT (data != NULL, -1);
 
     memcpy ((char*)data - sizeof (uint64_t), &leftCanary,  sizeof (uint64_t));
     memcpy ((char*)data + size,              &rightCanary, sizeof (uint64_t)); 

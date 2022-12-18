@@ -11,8 +11,8 @@ struct CPU
     Elem_t RAM [RamSize];
     Elem_t regs[NumRegs];
     
-    Stack_t stack; 
-    Stack_t stkRetIP;
+    Stack stack; 
+    Stack stkRetIP;
     
     int   codeSize;
     char* code;

@@ -25,4 +25,5 @@ clear :
 	rm -f ./src/build/*.o
 	make -C ./front_end clear
 	make -C ./back_end clear
-
+	make -C ./execution/ASM clear
+	make -C ./execution/CPU clear

@@ -34,7 +34,6 @@ struct CMD
 };
 
 //#define ON_LOG_FILE
-#define N_STACK_DUMP
 //#define NHASH
 //#define NCANARY
 
