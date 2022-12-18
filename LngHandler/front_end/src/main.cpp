@@ -14,9 +14,9 @@
 
 int main()
 {
-    setlocale(LC_ALL, ".UTF-8");
+    setlocale( LC_ALL, ".UTF-8" );
     
-    const char* fileDataName = "test.lng";
+    const char* fileDataName = "../test.lng";
     FILE* file = fopen( fileDataName, "r" ); 
     if(  !file  ) return -1;
 
@@ -37,19 +37,3 @@ int main()
 }
 
 //-----------------------------------------------------------------------------
-
-// ( 2 + 2 - sin ( 2 ) ) ^ 5
-
-/* варибля владос сначала 0
-владос теперь 7
-
-варибля гей сначала 1
-
-проверочка владос - 0
-{
-	
-}
-иначе проверочка саня - гей
-{
-
-} */

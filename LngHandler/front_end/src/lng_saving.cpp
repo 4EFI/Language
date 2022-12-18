@@ -17,20 +17,21 @@
 //-----------------------------------------------------------------------------
 
 int PrintPreorderLngNodes( Node* node, FILE* file ) 
-{
-    ASSERT( node != NULL && file != NULL, 0 );
+{    
+    if( node == NULL )
+    {        
+        fprintf( file, "{ NIL } " );
+        return 0;
+    }
 
     char str[ MaxStrLen ] = "";
     PrintLngNode( str, node, TREE );
 
     fprintf( file, "{ %s ", str );
 
-    if( node->left )  
+    if( node->left || node->right )
     {
-        PrintPreorderLngNodes( node->left, file );
-    }
-    if( node->right ) 
-    {
+        PrintPreorderLngNodes( node->left,  file );
         PrintPreorderLngNodes( node->right, file );
     }
     

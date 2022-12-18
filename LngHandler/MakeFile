@@ -1,0 +1,25 @@
+
+include SOURCES
+
+#compiling & linking
+
+OBJ_TMP = $(subst .cpp,.o,       $(SRC))
+OBJ     = $(subst src,src/build, $(OBJ_TMP))
+
+#compiling
+
+complie : $(LIBS) $(OBJ) 
+	make -C ./front_end	
+	make -C ./back_end	
+
+
+src/build/%.o : src/%.cpp  	
+	echo  $(@D)
+	mkdir -p $(@D)
+	$(CC) $(IFLAGS) $(CFLAGS) -c $^ -o $@	
+
+clear :
+	rm -f ./src/build/*.o
+	make -C ./front_end clear
+	make -C ./back_end clear
+

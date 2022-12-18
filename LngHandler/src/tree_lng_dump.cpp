@@ -22,12 +22,12 @@ int PrintOperation( char* str, int numOp )
     int indOp = GetIndexOperation( numOp );     
     if( indOp == -1 ) return -1; 
     
-    sprintf( str, " %s ", OpStrings[ indOp ].str );
+    sprintf( str, "%s", OpStrings[ indOp ].strStandart );
             
     return 1;
 }
 
-int PrintLngNode( char* str, Node* node )
+int PrintLngNode( char* str, Node* node, int typePrinting )
 {
     ASSERT( str  != NULL, 0 );
     ASSERT( node != NULL, 0 );
@@ -44,14 +44,18 @@ int PrintLngNode( char* str, Node* node )
     }
     else if( node->value->type == VAR_TYPE )
     {
-        sprintf( str, "%s", node->value->varValue );
+        if( typePrinting == DUMP ) sprintf( str,   "%s",   node->value->varValue );
+        else                       sprintf( str, "\"%s\"", node->value->varValue );
+
         return VAR_TYPE;
     }
     else
     {
         int type = node->value->type; 
         
-        sprintf( str, "%s", TypeStrings[ GetIndexType( type ) ].str ); // Can change to standart str out
+        if( typePrinting == DUMP ) sprintf( str, "%s", TypeStrings[ GetIndexType( type ) ].str         ); 
+        else                       sprintf( str, "%s", TypeStrings[ GetIndexType( type ) ].strStandart ); 
+
         return type;
     }
 
@@ -79,12 +83,12 @@ int PrintDotNode( Node* node, int nodeNum, FILE* dotFile, int side )
 
     if( side == LR )
     {
-        fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ { p: %p | n: %p | \\%s } }\" ];\n", 
+        fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ { p: %p | n: %p | %s } }\" ];\n", 
                             nodeNum, color, node->parent, node, valueStr );   
     }
     else
     {
-        fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ p: %p | n: %p | { \\%s } }\" ];\n", 
+        fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ p: %p | n: %p | { %s } }\" ];\n", 
                            nodeNum, color, node->parent, node, valueStr );   
     }
 
@@ -218,7 +222,7 @@ int FillHtmlFile( const char* graphName, const char* str, ... )
 
 int LngGraphDumpTree( Node* node, const char* str, ... )
 {
-    ASSERT( node != NULL, 0 );
+    if( node == NULL ) return 0;
 
     const char* tempDotFileName = "temp_graph_viz_tree.dot"; 
     FILE*       tempDotFile = LngCreateDotTreeDumpFile( node, tempDotFileName );
