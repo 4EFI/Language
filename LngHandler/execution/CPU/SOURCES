@@ -10,9 +10,9 @@ SRC = src/main.cpp  \
 LIBS = ../../LOG/lib/LOG.o 
 
 ifeq ($(OS),Windows_NT)
-	OUTPUT_FILE_NAME = ../cpu.exe
+	OUTPUT_FILE_NAME = ../../bin/cpu.exe
 else
-    OUTPUT_FILE_NAME = ../cpu
+    OUTPUT_FILE_NAME = ../../bin/cpu
 endif
 
 CC = g++

@@ -12,6 +12,8 @@ complie : $(LIBS) $(OBJ)
 	make -C ./front_end	
 	make -C ./back_end	
 	make -C ./compiling
+	make -C ./execution/ASM
+	make -C ./execution/CPU
 
 
 src/build/%.o : src/%.cpp  	
