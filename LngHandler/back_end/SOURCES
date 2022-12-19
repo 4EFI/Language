@@ -2,7 +2,9 @@
 # makefile data 
 
 SRC = src/main.cpp           \
-	  src/asm_converting.cpp
+	  src/asm_converting.cpp \
+	  src/var_handler.cpp    \
+      src/stack.cpp    
 
 # already compiled objects
 

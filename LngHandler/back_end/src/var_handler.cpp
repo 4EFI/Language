@@ -31,7 +31,7 @@ int VarTableCtor( VarTable* varTable )
 
 int AddLocalVarsBlock()
 {
-    VarTable          *varTable = NULL;
+    VarTable*          varTable = NULL;
     if( !VarTableCtor( varTable ) ) return 0;
     
     StackPush( &StkVarTables, varTable );
@@ -40,3 +40,8 @@ int AddLocalVarsBlock()
 }
 
 //-----------------------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------------------
+

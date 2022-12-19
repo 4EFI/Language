@@ -24,7 +24,7 @@ Node** LngTokenization( const char* str )
 
 	int curNodePos = 0;
 
-	char*   str_ptr = ( char* )str;
+	char*   str_ptr  = ( char* )str;
 	while( *str_ptr != '\0' )
 	{	
 		int numReadSyms = 0;
@@ -64,7 +64,6 @@ Node** LngTokenization( const char* str )
 		str_ptr += numReadSyms; 
 		curNodePos++;
 	}
-
 
 	nodes[ curNodePos ] = CREATE_TYPE_NODE( END_RROG_TYPE );
 

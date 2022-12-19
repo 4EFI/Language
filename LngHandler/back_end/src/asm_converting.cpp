@@ -10,6 +10,7 @@
 #include "stack.h"
 #include "lng_tools.h"
 #include "ru_translitor.h"
+#include "var_handler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,8 @@ int TreeToAsmConverting( Node* node, FILE* file )
 {
     ASSERT( node != NULL, 0 );    
     ASSERT( file != NULL, 0 );
+
+    AddLocalVarsBlock();
 
     TreeToAsm( node, file );
 

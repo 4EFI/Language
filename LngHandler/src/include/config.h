@@ -14,9 +14,10 @@ struct LngNode
 };
 
 struct Node;
+struct VarTable;
 
-typedef LngNode* TreeElem_t;
-typedef    Node*     Elem_t;
+typedef  LngNode* TreeElem_t;
+typedef VarTable*     Elem_t;
 
 // #define STACK_DUMP
 
