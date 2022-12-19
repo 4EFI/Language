@@ -1,0 +1,1 @@
+{ ST { VAR { "x" } { 1 } } { ST { VAR { "y" } { 10 } } { ST { WHILE { "x" } { ST { 1000 } { ST { EQ { "x" } { SUB { "x" } { 1 } } } { NIL } } } } { NIL } } } } 

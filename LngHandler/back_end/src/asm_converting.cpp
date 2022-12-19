@@ -129,6 +129,8 @@ int IfToAsm( Node* node, FILE* file )
 
     fprintf( file, "push 0\nje :endif%03d\n\n", ifCount );
 
+    AddLocalVarsBlock(); // {
+
     int isElse = ( ( IS_R_EXISTS && R_TYPE == ELSE_TYPE ) ? 1 : 0 );     
     if( isElse )
     {
@@ -139,11 +141,17 @@ int IfToAsm( Node* node, FILE* file )
         TreeToAsm( node->right, file );
     }
 
+    // Remove }
+
     fprintf( file, "\nendif%03d:\n\n", ifCount );
 
     if( isElse )
     {
+        AddLocalVarsBlock(); // {
+
         TreeToAsm( node->right->right, file );
+
+        // }
     }
 
     return 1;
