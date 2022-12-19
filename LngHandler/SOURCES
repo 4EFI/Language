@@ -7,7 +7,6 @@ SRC = src/ru_translitor.cpp    \
 	  src/tree_lng_parsing.cpp \
 	  src/str_algs.cpp         \
    	  src/file_algs.cpp        \
-   	  src/stack.cpp            \
 	  src/lng_tools.cpp
 
 # already compiled objects

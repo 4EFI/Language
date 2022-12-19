@@ -4,7 +4,7 @@
 #include "config.h"
 
 #include <stdio.h>
-#include <tree_lng.h>
+#include "tree_lng.h"
 
 //-----------------------------------------------------------------------------
 
@@ -32,12 +32,12 @@ int PrintLngNode  ( char* str, Node* node, int typePrinting = DUMP );
 int PrintDotNode( Node* node, int nodeNum, FILE* dotFile, int side = TD );
 
 int GraphVizTree ( Node*  node,  FILE* dotFile, int* nodeNum );
-int GraphVizNodes( Stack* nodes, FILE* dotFile );
+int GraphVizNodes( Node** nodes, FILE* dotFile );
 
 FILE* LngCreateDotTreeDumpFile( Node* node, const char* fileName );
 int   LngGraphDumpTree        ( Node* node, const char* str = "", ... );
 
-FILE* LngCreateDotNodesDumpFile( Stack* nodes, const char* fileName );
-int   LngGraphDumpNodes        ( Stack* nodes, const char* str = "", ... );
+FILE* LngCreateDotNodesDumpFile( Node** nodes, const char* fileName );
+int   LngGraphDumpNodes        ( Node** nodes, const char* str = "", ... );
 
 #endif

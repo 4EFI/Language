@@ -148,7 +148,8 @@ static const int NumTypeStrings = sizeof( TypeStrings ) / sizeof( TypeStr );
 //  Constants
 //-----------------------------------------------------------------------------
 
-const int MaxStrLen = 255;
+const int MaxStrLen   = 255;
+const int MaxNumNodes = 10000;
 
 const double Accuracy = 0.001;
 

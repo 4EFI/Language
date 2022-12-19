@@ -1,8 +1,8 @@
 #ifndef LNG_TOKENIZATION_H
 #define LNG_TOKENIZATION_H
 
-struct Stack;
+#include "tree_lng.h"
 
-Stack* LngTokenization( const char* str );
+Node** LngTokenization( const char* str );
 
 #endif

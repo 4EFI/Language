@@ -2,7 +2,6 @@
 #include "tree_lng_dump.h"
 #include "tree_lng.h"
 #include "my_assert.h"
-#include "stack.h"
 #include "LOG.h"
 #include "lng_tools.h"
 
@@ -129,7 +128,7 @@ int GraphVizTree( Node* node, FILE* dotFile, int* nodeNum )
     return *nodeNum - 1;
 }
 
-int GraphVizNodes( Stack* nodes, FILE* dotFile )
+int GraphVizNodes( Node** nodes, FILE* dotFile )
 {
     ASSERT( dotFile != NULL, 0 );
 
@@ -138,13 +137,17 @@ int GraphVizNodes( Stack* nodes, FILE* dotFile )
     int leftNum  = 0;
     int rightNum = 0;
     
-    for( int i = 0; i < nodes->size; i++ )
+    int numNodes = 0;
+    
+    for( int i = 0; i < MaxNumNodes; i++ )
     {
-        PrintDotNode( nodes->data[i], i, dotFile, LR );
+        if( nodes[i] == NULL ) { numNodes = i; break; }
+        
+        PrintDotNode( nodes[i], i, dotFile, LR );
     }
 
-    for( int i = 1; i < nodes->size; i++ )
-    {
+    for( int i = 1; i < numNodes; i++ )
+    {   
         fprintf( dotFile, "\t\"node%d\" -> \"node%d\" [ style = invis ]; \n", i - 1, i );
     }
 
@@ -170,7 +173,7 @@ FILE* LngCreateDotTreeDumpFile( Node* node, const char* fileName )
     return tempDotFile;
 }
 
-FILE* LngCreateDotNodesDumpFile( Stack* nodes, const char* fileName )
+FILE* LngCreateDotNodesDumpFile( Node** nodes, const char* fileName )
 {
     ASSERT( nodes != NULL, NULL );
 
@@ -249,7 +252,7 @@ int LngGraphDumpTree( Node* node, const char* str, ... )
     return 1;
 }
 
-int LngGraphDumpNodes( Stack* nodes, const char* str, ... )
+int LngGraphDumpNodes( Node** nodes, const char* str, ... )
 {
     ASSERT( nodes != NULL, 0 );
 

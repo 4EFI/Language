@@ -8,7 +8,6 @@
 #include "tree_lng.h"
 #include "tree_lng_dump.h"
 #include "LOG.h"
-#include "stack.h"
 #include "lng_tools.h"
 #include "ru_translitor.h"
 
@@ -24,7 +23,7 @@ Node* GetLngTree( const char* str )
 {
 	ASSERT( str != NULL, NULL );
 
-	Stack* nodes = LngTokenization( str );
+	Node** nodes = LngTokenization( str );
 
 	LngGraphDumpNodes( nodes );
 
@@ -42,7 +41,7 @@ Node* GetLngTree( const char* str )
 //	Recursive descent 
 //-----------------------------------------------------------------------------
 
-Node* GetGrammar( Stack* nodes, int* curPos )
+Node* GetGrammar( Node** nodes, int* curPos )
 {   
    	Node* node = GetStatememt( nodes, curPos );
 
@@ -54,7 +53,7 @@ Node* GetGrammar( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetStatememt( Stack* nodes, int* curPos )
+Node* GetStatememt( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetStatement" );
 	LOG( "%d :", *curPos );
@@ -77,7 +76,7 @@ Node* GetStatememt( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetInitVar( Stack* nodes, int* curPos )
+Node* GetInitVar( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetInitVar" );
 	LOG( "%d :", *curPos );
@@ -103,7 +102,7 @@ Node* GetInitVar( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetEqual( Stack* nodes, int* curPos )
+Node* GetEqual( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetEqual" );
 	LOG( "%d :", *curPos );
@@ -126,7 +125,7 @@ Node* GetEqual( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetIf( Stack* nodes, int* curPos )
+Node* GetIf( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetIf" );
 	LOG( "%d :", *curPos );
@@ -189,7 +188,7 @@ Node* GetIf( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetWhile( Stack* nodes, int* curPos )
+Node* GetWhile( Node** nodes, int* curPos )
 {
 	if( CUR_NODE_TYPE == WHILE_TYPE )
 	{
@@ -213,7 +212,7 @@ Node* GetWhile( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetAddSub( Stack* nodes, int* curPos )
+Node* GetAddSub( Node** nodes, int* curPos )
 {
 	Node* node = GetMulDiv( nodes, curPos );
 
@@ -240,7 +239,7 @@ Node* GetAddSub( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetMulDiv( Stack* nodes, int* curPos )
+Node* GetMulDiv( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetMulDiv" );
 	LOG( "%d :", *curPos );
@@ -270,7 +269,7 @@ Node* GetMulDiv( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetPower( Stack* nodes, int* curPos )
+Node* GetPower( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetPower" );
 	LOG( "%d :", *curPos );
@@ -292,7 +291,7 @@ Node* GetPower( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetBracket( Stack* nodes, int* curPos )
+Node* GetBracket( Node** nodes, int* curPos )
 {		
 	LOG( "Enter GetBracket" );
 	LOG( "%d :", *curPos );
@@ -318,7 +317,7 @@ Node* GetBracket( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
+Node* GetStrMathsFunc( Node** nodes, int* curPos ) // sin cos ln
 {	
 	LOG( "Enter GetStrMathsFunc" );
 	LOG( "%d :", *curPos );
@@ -343,7 +342,7 @@ Node* GetStrMathsFunc( Stack* nodes, int* curPos ) // sin cos ln
 
 //-----------------------------------------------------------------------------
 
-Node* GetVar( Stack* nodes, int* curPos )
+Node* GetVar( Node** nodes, int* curPos )
 {	
 	LOG( "Enter GetVar" );
 	LOG( "%d :", *curPos );
@@ -357,7 +356,7 @@ Node* GetVar( Stack* nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetNumber( Stack* nodes, int* curPos )
+Node* GetNumber( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetNumber" );
 	LOG( "%d :", *curPos );

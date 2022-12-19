@@ -7,7 +7,6 @@
 #include "tree_lng_dump.h"
 #include "my_assert.h"
 #include "LOG.h"
-#include "stack.h"
 #include "lng_tools.h"
 #include "ru_translitor.h"
 

@@ -45,7 +45,7 @@
 #define CREATE_TYPE_NODE_LR( TYPE, L, R ) CreateLngNode( TYPE, 0, -1, NULL, L, R )
 
 
-#define CUR_NODE nodes->data[*curPos]
+#define CUR_NODE nodes[*curPos]
 #define CUR_NODE_TYPE CUR_NODE->value->type
 #define CUR_NODE_OP   CUR_NODE->value->opValue
 

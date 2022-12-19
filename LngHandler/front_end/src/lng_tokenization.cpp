@@ -7,21 +7,22 @@
 #include "tree_lng_dump.h"
 #include "my_assert.h"
 #include "LOG.h"
-#include "stack.h"
 #include "lng_tools.h"
 #include "ru_translitor.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //-----------------------------------------------------------------------------
 
-Stack* LngTokenization( const char* str )
+Node** LngTokenization( const char* str )
 {
 	ASSERT( str != NULL, NULL );
 
-	Stack*     stk = ( Stack* )calloc( 1, sizeof( Stack ) );
-	StackCtor( stk, 1 );
+	Node** nodes = ( Node** )calloc( MaxNumNodes, sizeof( Node* ) ); 
+
+	int curNodePos = 0;
 
 	char*   str_ptr = ( char* )str;
 	while( *str_ptr != '\0' )
@@ -34,7 +35,7 @@ Stack* LngTokenization( const char* str )
 
 		if( isNum )
 		{
-			StackPush( stk, CREATE_VAL_NODE( num ) );
+			nodes[ curNodePos ] = CREATE_VAL_NODE( num );
 		}
 		else
 		{
@@ -48,24 +49,26 @@ Stack* LngTokenization( const char* str )
 
 			if/* */( type == OP_TYPE )
 			{
-				StackPush( stk, CREATE_OP_NODE( opType, NULL, NULL ) );	
+				nodes[ curNodePos ] = CREATE_OP_NODE( opType, NULL, NULL );	
 			}
 			else if( type == -1 )
 			{					
-				StackPush( stk, CREATE_VAR_NODE( TranslitString( strType, strlen( strType ) ) ) );
+				nodes[ curNodePos ] = CREATE_VAR_NODE( TranslitString( strType, strlen( strType ) ) );
 			}
 			else
 			{
-				StackPush( stk, CREATE_TYPE_NODE( type ) );
+				nodes[ curNodePos ] = CREATE_TYPE_NODE( type );
 			}
 		}
 
 		str_ptr += numReadSyms; 
+		curNodePos++;
 	}
 
-	StackPush( stk, CREATE_TYPE_NODE( END_RROG_TYPE ) );
 
-	return stk;
+	nodes[ curNodePos ] = CREATE_TYPE_NODE( END_RROG_TYPE );
+
+	return nodes;
 }
 
 //-----------------------------------------------------------------------------
