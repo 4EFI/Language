@@ -4,6 +4,7 @@
 
 #include "stack.h"
 #include "my_assert.h"
+#include "LOG.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,22 +18,13 @@ Stack StkVarTables = { 0 };
 
 //-----------------------------------------------------------------------------
 
-int VarTableCtor( VarTable* varTable )
-{
-    ASSERT( varTable != NULL, 0 );
-
-    varTable = ( VarTable* )calloc( 1, sizeof( VarTable ) );
-
-    varTable->table   = ( Var* )calloc( MaxNumVars, sizeof( Var ) );
-    varTable->numVars = 0;
-
-    return 1;
-}
-
 int AddLocalVarsBlock()
 {
-    VarTable*          varTable = NULL;
-    if( !VarTableCtor( varTable ) ) return 0;
+    static int isStkEmpty = true;
+    if(        isStkEmpty        ) { isStkEmpty = false; StackCtor( &StkVarTables, 1 ); }
+
+    VarTable* varTable = ( VarTable* )calloc( 1, sizeof( VarTable ) );
+    varTable->numVars  = 0;
     
     StackPush( &StkVarTables, varTable );
 
@@ -41,7 +33,50 @@ int AddLocalVarsBlock()
 
 //-----------------------------------------------------------------------------
 
+int GetTableVarPos( const char* varName )
+{
+    ASSERT( varName != NULL, 0 );
 
+    int numBack = 0;
+
+    for( int curTable = StkVarTables.size - 1; curTable >= 0; curTable-- )
+    {        
+        int curTableSize = StkVarTables.data[ curTable ]->numVars;
+        
+        for( int i = 0; i < curTableSize; i++ )
+        {
+            char* curVarName = StkVarTables.data[ curTable ]->varNames[i];
+            
+            if( !strcmp( varName, curVarName ) )
+            {
+                return i /* - numBack */ ;
+            }
+        }
+    }
+
+    printf( "Variable \"%s\" does not exist...\n" );
+
+    assert( 0 );
+    return  0;
+}
+
+//-----------------------------------------------------------------------------
+
+int AddVarToTable( const char* varName )
+{
+    ASSERT( varName != NULL, 0 );
+
+    int curTable  = StkVarTables.size - 1;
+
+    LOG( "%d", curTable );
+
+    int curVarPos = StkVarTables.data[ curTable ]->numVars;
+
+    StkVarTables.data[ curTable ]->varNames[ curVarPos ] = ( char* )varName; // set varName
+    StkVarTables.data[ curTable ]->numVars++;
+
+    return curVarPos;
+}
 
 //-----------------------------------------------------------------------------
 

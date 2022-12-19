@@ -3,25 +3,20 @@
 
 //-----------------------------------------------------------------------------
 
-struct Var
-{
-    char* varName;
-    int   pos;
-};
-
-const int MaxNumVars = 1024;
+const int MaxNumVars = 100;
 
 struct VarTable
 {
-    Var* table;
-    int numVars;
+    char* varNames[ MaxNumVars ];
+    int   numVars;
 };
-
-int VarTableCtor( VarTable* varTable );
 
 //-----------------------------------------------------------------------------
 
 int AddLocalVarsBlock();
+
+int GetTableVarPos( const char* varName );
+int AddVarToTable ( const char* varName );
 
 //-----------------------------------------------------------------------------
 

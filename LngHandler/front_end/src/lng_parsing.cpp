@@ -112,7 +112,12 @@ Node* GetEqual( Node** nodes, int* curPos )
 		Node* nodeL = CUR_NODE;
 		NEXT_TOKEN
 
-		assert( CUR_NODE_TYPE == EQ_TYPE );
+		if( CUR_NODE_TYPE != EQ_TYPE )
+		{
+			PREV_TOKEN
+			return GetAddSub( nodes, curPos );
+		}
+		
 		NEXT_TOKEN
 
 		Node* nodeR = GetAddSub( nodes, curPos );

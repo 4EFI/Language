@@ -77,7 +77,7 @@ DEF_CMD( POP, 7,
 
     if( arg_ptr - cpu->RAM < RamSize && arg_ptr - cpu->RAM >= 0 )
     {
-        OutRam( cpu, RamWidthSize );
+        //OutRam( cpu, RamWidthSize );
         //Sleep( 1000 );
     }
 })

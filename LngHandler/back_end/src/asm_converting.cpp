@@ -52,6 +52,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += MathExpressionToAsm( node, file );
     isAsm += IfToAsm            ( node, file );
     isAsm += WhileToAsm         ( node, file );
+    isAsm += VarInitToAsm       ( node, file );
 
     if( isAsm ) return 0;
     
@@ -93,6 +94,18 @@ int MathExpressionToAsm( Node* node, FILE* file )
             fprintf( file, "push %g\n", NODE_VAL );
             break;
         } 
+
+        case VAR_TYPE:
+        {
+            int varPos = GetTableVarPos( NODE_VAR );
+
+            VarRAMPosToAsm( NODE_VAR, varPos, file ); 
+
+            fprintf( file, "push [ rbx ] ; push \"%s\"\n", NODE_VAR );
+
+            LOG( "%d", varPos );
+            break;
+        }
     }
 
     return 1; 
@@ -158,6 +171,41 @@ int WhileToAsm( Node* node, FILE* file )
     TreeToAsm( node->right, file );
 
     fprintf( file, "\njmp :while%03d\n" "endWhile%03d:\n\n", whileCount, whileCount );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int VarInitToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != VAR_INIT_TYPE ) return 0;
+
+    int pos = AddVarToTable( L_VAR );
+
+    VarRAMPosToAsm( L_VAR, pos, file );
+
+    MathExpressionToAsm( node->right, file );
+
+    fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
+
+    return 1;
+}  
+
+//-----------------------------------------------------------------------------
+
+int VarRAMPosToAsm( const char* varName, int pos, FILE* file )
+{
+    ASSERT( varName != NULL, 0 );
+    ASSERT( file    != NULL, 0 );
+    
+    fprintf( file, "push rax\n" );
+    fprintf( file, "push %d\n", pos );
+    fprintf( file, "add\n" );
+    fprintf( file, "pop rbx ; set \"%s\" pos\n\n", varName );
 
     return 1;
 }

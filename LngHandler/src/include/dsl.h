@@ -54,6 +54,7 @@
 #define NODE_VAL  node->value->dblValue
 #define NODE_VAR  node->value->varValue
 
+#define PREV_TOKEN (*curPos)--;
 #define NEXT_TOKEN (*curPos)++;
 
 // +
