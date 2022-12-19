@@ -19,14 +19,35 @@
 
 //-----------------------------------------------------------------------------
 
+int TreeToAsmConverting( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    TreeToAsm( node, file );
+
+    fprintf( file, "\nout\n" ); // for test !!!! (DELETE IT!!)
+
+    fprintf( file, "\nhlt\n" );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+
+//  ASM rules
+//-----------------------------------------------------------------------------
+
 int TreeToAsm( Node* node, FILE* file )
 {
-    ASSERT( node != NULL, NULL );    
-    ASSERT( file != NULL, NULL );
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
 
     int isAsm = 0;
 
     isAsm += MathExpressionToAsm( node, file );
+    isAsm += IfToAsm            ( node, file );
 
     if( isAsm ) return 0;
     
@@ -40,14 +61,14 @@ int TreeToAsm( Node* node, FILE* file )
 
 int MathExpressionToAsm( Node* node, FILE* file )
 {
-    ASSERT( node != NULL, NULL );    
-    ASSERT( file != NULL, NULL );
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
 
     if( NODE_TYPE != OP_TYPE  && 
         NODE_TYPE != VAR_TYPE && 
         NODE_TYPE != VAL_TYPE )
     {   
-        return NULL;
+        return 0;
     }
 
     if( node->left  ) MathExpressionToAsm( node->left,  file );
@@ -77,7 +98,37 @@ int MathExpressionToAsm( Node* node, FILE* file )
 
 int IfToAsm( Node* node, FILE* file )
 {
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
 
+    static int ifCount = 0;
+
+    if( NODE_TYPE != IF_TYPE ) return 0;
+
+    ifCount++;
+
+    MathExpressionToAsm( node->left, file );
+
+    fprintf( file, "push 0\nje :endif%03d\n\n", ifCount );
+
+    int isElse = ( ( IS_R_EXISTS && R_TYPE == ELSE_TYPE ) ? 1 : 0 );     
+    if( isElse )
+    {
+        TreeToAsm( node->right->left, file );
+    }
+    else
+    {
+        TreeToAsm( node->right, file );
+    }
+
+    fprintf( file, "\nendif%03d:\n\n", ifCount );
+
+    if( isElse )
+    {
+        TreeToAsm( node->right->right, file );
+    }
+
+    return 1;
 }
 
 //-----------------------------------------------------------------------------

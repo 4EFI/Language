@@ -31,6 +31,10 @@
 #define R_VAR node->right->value->varValue
 #define L_VAR node->left ->value->varValue 
 
+// Right/left node type
+#define R_TYPE node->right->value->type
+#define L_TYPE node->left ->value->type 
+
 #define CREATE_VAL_NODE( NUM ) CreateLngNode( VAL_TYPE, NUM, -1 ) 
 #define CREATE_VAR_NODE( VAR ) CreateLngNode( VAR_TYPE, 0,   -1, (char*)VAR )
 
