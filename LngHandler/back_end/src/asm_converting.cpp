@@ -48,6 +48,7 @@ int TreeToAsm( Node* node, FILE* file )
 
     isAsm += MathExpressionToAsm( node, file );
     isAsm += IfToAsm            ( node, file );
+    isAsm += WhileToAsm         ( node, file );
 
     if( isAsm ) return 0;
     
@@ -127,6 +128,33 @@ int IfToAsm( Node* node, FILE* file )
     {
         TreeToAsm( node->right->right, file );
     }
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int WhileToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    static int whileCount = 0;
+
+    if( NODE_TYPE != WHILE_TYPE ) return 0;
+
+    whileCount++;
+
+    // While start
+    fprintf( file, "\nwhile%03d:\n", whileCount );
+
+    MathExpressionToAsm( node->left, file );
+
+    fprintf( file, "push 0\nje :endWhile%03d\n\n", whileCount );
+
+    TreeToAsm( node->right, file );
+
+    fprintf( file, "\njmp :while%03d\n" "endWhile%03d:\n\n", whileCount, whileCount );
 
     return 1;
 }

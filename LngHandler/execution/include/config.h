@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 
 static const int NumRegs       = 5;
-static const int NumLabels     = 200;
+static const int NumLabels     = 1000;
 
 static const int RamWidthSize  = 60;
 static const int RamHeightSize = 30; 
