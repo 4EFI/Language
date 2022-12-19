@@ -53,6 +53,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += IfToAsm            ( node, file );
     isAsm += WhileToAsm         ( node, file );
     isAsm += VarInitToAsm       ( node, file );
+    isAsm += VarEqualToAsm      ( node, file );
 
     if( isAsm ) return 0;
     
@@ -194,6 +195,26 @@ int VarInitToAsm( Node* node, FILE* file )
 
     return 1;
 }  
+
+//-----------------------------------------------------------------------------
+
+int VarEqualToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != EQ_TYPE ) return 0;
+
+    MathExpressionToAsm( node->right, file );
+
+    int pos = GetTableVarPos( L_VAR );
+
+    VarRAMPosToAsm( L_VAR, pos, file );
+
+    fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
+
+    return 1;
+}
 
 //-----------------------------------------------------------------------------
 
