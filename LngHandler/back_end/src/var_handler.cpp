@@ -27,7 +27,7 @@ int AddLocalVarsBlock( FILE* file, int isNewFunc )
 
     VarTable* varTable  = ( VarTable* )calloc( 1, sizeof( VarTable ) );
     varTable->numVars   = 0;
-    varTable->isNewFunc = false;
+    varTable->isNewFunc = isNewFunc;
     
     StackPush( &StkVarTables, varTable );
 
@@ -76,21 +76,26 @@ int GetTableVarPos( const char* varName )
     int numBack        = 0;
     int indexLastBlock = StkVarTables.size - 1;
 
+    int isNewFunc = false;
+
     for( int curTable = indexLastBlock; curTable >= 0; curTable-- )
     {        
         int curTableSize = StkVarTables.data[ curTable ]->numVars;
         
-        for( int i = 0; i < curTableSize; i++ )
+        if( !isNewFunc || curTable == 0 )
         {
-            char* curVarName = StkVarTables.data[ curTable ]->varNames[i];
-            
-            if( !strcmp( varName, curVarName ) )
+            for( int i = 0; i < curTableSize; i++ )
             {
-                // LOG( "\"%s\" pos = %d ; num vars = %d", varName, -( numBack + curTableSize - i ), curTableSize );  
+                char* curVarName = StkVarTables.data[ curTable ]->varNames[i];
                 
-                if( curTable == indexLastBlock ) { return i; }
-                else                             { return -( numBack + curTableSize - i ); } 
+                if( !strcmp( varName, curVarName ) )
+                {                
+                    if( curTable == indexLastBlock ) { return i; }
+                    else                             { return -( numBack + curTableSize - i ); } 
+                }
             }
+
+            isNewFunc = StkVarTables.data[ curTable ]->isNewFunc;
         }
 
         if( curTable != indexLastBlock ) numBack += curTableSize; // If not the last local block
@@ -121,4 +126,3 @@ int AddVarToTable( const char* varName )
 }
 
 //-----------------------------------------------------------------------------
-
