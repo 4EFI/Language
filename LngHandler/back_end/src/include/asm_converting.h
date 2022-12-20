@@ -2,10 +2,16 @@
 #define ASM_CONVERTING_H
 
 #include <stdio.h>
+#include "tree_lng.h"
 
 //-----------------------------------------------------------------------------
 
-struct Node;
+enum
+{
+    IN, 
+    OUT, 
+    FUNC
+};
 
 int TreeToAsmConverting( Node* node, FILE* file );
 
@@ -15,10 +21,11 @@ int IfToAsm            ( Node* node, FILE* file );
 int WhileToAsm         ( Node* node, FILE* file );
 int VarInitToAsm       ( Node* node, FILE* file );
 int VarEqualToAsm      ( Node* node, FILE* file );
+int InputToAsm         ( Node* node, FILE* file );
 int OutputToAsm        ( Node* node, FILE* file );
-int ParamsToAsm        ( Node* node, FILE* file );
+int ParamsToAsm        ( Node* node, FILE* file, int typeParams );
 
-int VarRAMPosToAsm( const char* varName, int pos, FILE* file );
+int VarRAMPosToAsm( const char* varName, FILE* file );
 
 //-----------------------------------------------------------------------------
 

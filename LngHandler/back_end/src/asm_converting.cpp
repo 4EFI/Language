@@ -52,6 +52,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += WhileToAsm         ( node, file );
     isAsm += VarInitToAsm       ( node, file );
     isAsm += VarEqualToAsm      ( node, file );
+    isAsm += InputToAsm         ( node, file );
     isAsm += OutputToAsm        ( node, file );
 
     if( isAsm ) return 0;
@@ -97,13 +98,9 @@ int MathExpressionToAsm( Node* node, FILE* file )
 
         case VAR_TYPE:
         {
-            int varPos = GetTableVarPos( NODE_VAR );
-
-            VarRAMPosToAsm( NODE_VAR, varPos, file ); 
+            VarRAMPosToAsm( NODE_VAR, file ); 
 
             fprintf( file, "push [ rbx ] ; push \"%s\"\n", NODE_VAR );
-
-            LOG( "%d", varPos );
             break;
         }
     }
@@ -194,7 +191,7 @@ int VarInitToAsm( Node* node, FILE* file )
 
     int pos = AddVarToTable( L_VAR );
 
-    VarRAMPosToAsm( L_VAR, pos, file );
+    VarRAMPosToAsm( L_VAR, file );
 
     MathExpressionToAsm( node->right, file );
 
@@ -214,11 +211,23 @@ int VarEqualToAsm( Node* node, FILE* file )
 
     MathExpressionToAsm( node->right, file );
 
-    int pos = GetTableVarPos( L_VAR );
-
-    VarRAMPosToAsm( L_VAR, pos, file );
+    VarRAMPosToAsm( L_VAR, file );
 
     fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int InputToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != IN_TYPE ) return 0;
+
+    ParamsToAsm( node->left, file, IN );
 
     return 1;
 }
@@ -232,14 +241,14 @@ int OutputToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != OUT_TYPE ) return 0;
 
-    ParamsToAsm( node->left, file );
+    ParamsToAsm( node->left, file, OUT );
 
     return 1;
 }
 
 //-----------------------------------------------------------------------------
 
-int ParamsToAsm( Node* node, FILE* file )
+int ParamsToAsm( Node* node, FILE* file, int typeParams )
 {
     ASSERT( node != NULL, 0 );    
     ASSERT( file != NULL, 0 );
@@ -248,28 +257,37 @@ int ParamsToAsm( Node* node, FILE* file )
 
     // VarInitToAsm( node, file );
 
-    if( node->left  ) MathExpressionToAsm( node->left,  file );
+    if( typeParams == IN ) fprintf( file, "in\n" );
 
-    fprintf( file, "out\n" );
+    if( node->left ) 
+    {
+        if/* */( typeParams == IN  ) VarRAMPosToAsm     ( L_VAR,      file );
+        else if( typeParams == OUT ) MathExpressionToAsm( node->left, file );
+    }
 
-    if( node->right ) ParamsToAsm        ( node->right, file );
+    if( typeParams == OUT ) fprintf( file, "out\n" );
+    if( typeParams == IN  ) fprintf( file, "pop [ rbx ]\n" ); // set var
+
+    if( node->right ) ParamsToAsm( node->right, file, typeParams );
 
     return 1;
 }
 
 //-----------------------------------------------------------------------------
 
-int VarRAMPosToAsm( const char* varName, int pos, FILE* file )
+int VarRAMPosToAsm( const char* varName, FILE* file )
 {
     ASSERT( varName != NULL, 0 );
     ASSERT( file    != NULL, 0 );
+
+    int pos = GetTableVarPos( varName );
     
     fprintf( file, "push rax\n" );
     fprintf( file, "push %d\n", pos );
     fprintf( file, "add\n" );
     fprintf( file, "pop rbx ; set \"%s\" pos\n\n", varName );
 
-    return 1;
+    return pos;
 }
 
 //-----------------------------------------------------------------------------

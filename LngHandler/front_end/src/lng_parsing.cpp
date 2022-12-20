@@ -135,7 +135,19 @@ Node* GetInput( Node** nodes, int* curPos )
 	LOG( "Enter GetInput" );
 	LOG( "%d :", *curPos );
 
-	//if(  )
+	if( CUR_NODE_TYPE == IN_TYPE )
+	{
+		NEXT_TOKEN
+		
+		// Get params
+		ASSERT_L_BRACKET // (
+
+        Node* nodeL = GetInOutParams( nodes, curPos, IN );
+
+		ASSERT_R_BRACKET // )
+
+		return CREATE_TYPE_NODE_LR( IN_TYPE, nodeL, NULL );
+	}
 
 	return GetWhile( nodes, curPos );
 }
@@ -168,7 +180,7 @@ Node* GetOutput( Node** nodes, int* curPos )
 
 Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 {
-	LOG( "Enter GetOutParams" );
+	LOG( "Enter GetInOutParams" );
 	LOG( "%d :", *curPos );
 
 	Node* node     = NULL;
