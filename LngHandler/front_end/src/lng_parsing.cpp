@@ -25,12 +25,15 @@ Node* GetLngTree( const char* str )
 
 	Node** nodes = LngTokenization( str );
 
+	// Check: no code
+	if( nodes[ 0 ]->value->type == END_PROG_TYPE ) { printf( "ERROR: no code...\n" ); return NULL; }
+
 	LngGraphDumpNodes( nodes );
 
 	int curPos = 0;
 	Node* node = GetGrammar( nodes, &curPos );
 
-	LOG( "Tree have been parsed" );
+	printf( "OK: tree has been parsed\n" );
 
 	LngGraphDumpTree( node );
 
@@ -47,7 +50,7 @@ Node* GetGrammar( Node** nodes, int* curPos )
 {   
    	Node* node = GetStatement( nodes, curPos );
 
-	assert( CUR_NODE_TYPE == END_RROG_TYPE );
+	assert( CUR_NODE_TYPE == END_PROG_TYPE );
 
 	LinkNodeParents( node, NULL );
 	return node;
@@ -67,7 +70,7 @@ Node* GetStatement( Node** nodes, int* curPos )
 		return GetStatement( nodes, curPos );
 	}
 
-	if( CUR_NODE_TYPE == END_RROG_TYPE || 
+	if( CUR_NODE_TYPE == END_PROG_TYPE || 
 		CUR_NODE_TYPE == R_BRACE_TYPE ) return NULL;
 
 	Node* nodeL = GetFunction ( nodes, curPos );
@@ -87,6 +90,8 @@ Node* GetFunction( Node** nodes, int* curPos )
 	
 	if( CUR_NODE_TYPE == VAR_INIT_TYPE )
     {
+		Node* nodeType = CUR_NODE;
+		
 		NEXT_TOKEN
 		assert( CUR_NODE_TYPE == VAR_TYPE );
 
@@ -98,7 +103,7 @@ Node* GetFunction( Node** nodes, int* curPos )
 		{
 			*curPos = oldCurPos;
 			
-			return GetInitVar( nodes, curPos );
+			return GetInitVar( nodes, curPos ); 
 		}
 
 		assert( CUR_NODE_TYPE == L_BRACKET_TYPE ); // (
@@ -116,13 +121,74 @@ Node* GetFunction( Node** nodes, int* curPos )
 
 		ASSERT_R_BRACE // :!
     
-        Node* node = CREATE_TYPE_NODE_LR( FUNC_TYPE, nodeL, nodeR );
-		node->value->varValue = name;
+        Node* node = CREATE_TYPE_NODE_LR(  FUNC_TYPE, CREATE_VAR_NODE_LR( name, nodeL, nodeType ), nodeR  );
 
 		return node;
     }
 
-    return GetWhile( nodes, curPos );
+    return GetOutput( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetInput( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetInput" );
+	LOG( "%d :", *curPos );
+
+	//if(  )
+
+	return GetWhile( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetOutput( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetInput" );
+	LOG( "%d :", *curPos );
+
+	if( CUR_NODE_TYPE == OUT_TYPE )
+	{
+		
+	}
+	
+	return GetInput( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetCallParam( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetCallParam" );
+	LOG( "%d :", *curPos );
+
+	Node* node     = NULL;
+	Node* lastNode = NULL;
+
+	int isNewParam = false;
+
+	while( CUR_NODE_TYPE == VAR_TYPE || 
+	       CUR_NODE_TYPE == VAL_TYPE || 
+		   isNewParam )
+	{
+		if( node ) assert( isNewParam == true );
+		
+		Node* nodeTemp  = GetAddSub( nodes, curPos );
+
+		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
+
+		if( !lastNode ) { node            = nodeParam; lastNode = node;            }
+		else            { lastNode->right = nodeParam; lastNode = lastNode->right; }
+
+		lastNode->right = nodeParam; 
+		lastNode        = lastNode->right;
+		
+		if( CUR_NODE_TYPE == COMMA_TYPE ) { isNewParam = true;  NEXT_TOKEN }
+		else                              { isNewParam = false;            }
+	}
+
+	return  node;
 }
 
 //-----------------------------------------------------------------------------
@@ -171,15 +237,8 @@ Node* GetParams( Node** nodes, int* curPos )
 		if( !lastNode ) { node            = nodeParam; lastNode = node;            }
 		else            { lastNode->right = nodeParam; lastNode = lastNode->right; }
 		
-		if( CUR_NODE_TYPE == COMMA_TYPE )
-		{
-			isNewParam = true;
-			NEXT_TOKEN
-		}
-		else
-		{
-			isNewParam = false;
-		}
+		if( CUR_NODE_TYPE == COMMA_TYPE ) { isNewParam = true;  NEXT_TOKEN }
+		else                              { isNewParam = false;            }
 	}
 
 	return node;

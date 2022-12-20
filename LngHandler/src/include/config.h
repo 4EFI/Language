@@ -25,7 +25,7 @@ typedef VarTable*     Elem_t;
 
 enum Types
 {
-    END_RROG_TYPE,
+    END_PROG_TYPE,
     SEMICOLON_TYPE,
 
     ST_TYPE,
@@ -55,7 +55,10 @@ enum Types
     
     FUNC_TYPE,
     PARAM_TYPE,
-    COMMA_TYPE
+    COMMA_TYPE, 
+
+    IN_TYPE,
+    OUT_TYPE
 };
 
 //-----------------------------------------------------------------------------
@@ -127,13 +130,13 @@ struct TypeStr
 
 static TypeStr TypeStrings[] = 
 {
-    { END_RROG_TYPE,  "\\0", "" },
+    { END_PROG_TYPE,  "\\0", "" },
     { SEMICOLON_TYPE, ";", "" },
 
     { ST_TYPE, "ST", "ST" },
     
-    { L_COMMENT_TYPE, "/*", "" },
-    { R_COMMENT_TYPE, "*/", "" },
+    { L_COMMENT_TYPE, "!%", "" },
+    { R_COMMENT_TYPE, "%!", "" },
 
     { L_BRACE_TYPE, "!:", "" },
     { R_BRACE_TYPE, ":!", "" },
@@ -151,7 +154,10 @@ static TypeStr TypeStrings[] =
     
     { FUNC_TYPE,  "FUNC",  "FUNC" },
     { COMMA_TYPE, ",",     "" },
-    { PARAM_TYPE, "PARAM", "PARAM" }
+    { PARAM_TYPE, "PARAM", "PARAM" },
+
+    { IN_TYPE,  "IN",  "IN" }, 
+    { OUT_TYPE, "OUT", "OUT" }
 };
 
 static const int NumTypeStrings = sizeof( TypeStrings ) / sizeof( TypeStr );

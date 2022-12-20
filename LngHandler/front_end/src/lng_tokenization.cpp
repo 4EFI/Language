@@ -24,6 +24,8 @@ Node** LngTokenization( const char* str )
 
 	int curNodePos = 0;
 
+	int isStartComment = false;
+
 	char*   str_ptr  = ( char* )str;
 	while( *str_ptr != '\0' )
 	{	
@@ -35,6 +37,9 @@ Node** LngTokenization( const char* str )
 
 		if( isNum )
 		{
+			// Is is comment
+			if( isStartComment ) { str_ptr += numReadSyms; continue; }
+			
 			nodes[ curNodePos ] = CREATE_VAL_NODE( num );
 		}
 		else
@@ -46,6 +51,14 @@ Node** LngTokenization( const char* str )
 
 			int opType = -1;
 			int type   = GetType( strType, &opType );
+
+
+			// Remove comments
+			if( type == R_COMMENT_TYPE &&  isStartComment ) { str_ptr += numReadSyms; isStartComment = false; continue; }
+			if( type == L_COMMENT_TYPE && !isStartComment ) { str_ptr += numReadSyms; isStartComment = true;  continue; }
+
+			if( isStartComment ) { str_ptr += numReadSyms; continue; }
+
 
 			if/* */( type == OP_TYPE )
 			{
@@ -65,7 +78,7 @@ Node** LngTokenization( const char* str )
 		curNodePos++;
 	}
 
-	nodes[ curNodePos ] = CREATE_TYPE_NODE( END_RROG_TYPE );
+	nodes[ curNodePos ] = CREATE_TYPE_NODE( END_PROG_TYPE );
 
 	return nodes;
 }

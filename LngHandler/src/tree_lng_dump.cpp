@@ -33,15 +33,11 @@ int PrintLngNode( char* str, Node* node, int typePrinting )
 
     if/* */( node->value->type == VAL_TYPE )
     {
-        LOG( "Val" );
-        
         sprintf( str, "%g", node->value->dblValue );
         return VAL_TYPE;
     }
     else if( node->value->type == OP_TYPE )
     {   
-        LOG( "OP" );
-        
         PrintOperation( str, node->value->opValue );
         return OP_TYPE;
     }
@@ -59,8 +55,6 @@ int PrintLngNode( char* str, Node* node, int typePrinting )
     {
         int type = node->value->type; 
         int ind  = GetIndexType( type );
-
-        LOG( "ind = %d", ind );
         
         if( typePrinting == DUMP ) sprintf( str, "%s", TypeStrings[ ind ].str         ); 
         else                       sprintf( str, "%s", TypeStrings[ ind ].strStandart ); 
@@ -87,12 +81,8 @@ int PrintDotNode( Node* node, int nodeNum, FILE* dotFile, int side )
     else if( typeNum == Types::VAR_TYPE ) { color = "lightblue"   ; }
     else                                  { color = "lightyellow" ; }
 
-    LOG( "(" );
-
     char valueStr[ MaxStrLen ] = "";
     PrintLngNode( valueStr, node );
-
-    LOG( ")" );
 
     if( side == LR )
     {

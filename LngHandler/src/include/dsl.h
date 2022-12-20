@@ -38,6 +38,8 @@
 #define CREATE_VAL_NODE( NUM ) CreateLngNode( VAL_TYPE, NUM, -1 ) 
 #define CREATE_VAR_NODE( VAR ) CreateLngNode( VAR_TYPE, 0,   -1, (char*)VAR )
 
+#define CREATE_VAR_NODE_LR( VAR, L, R ) CreateLngNode( VAR_TYPE, 0,   -1, (char*)VAR, L, R )
+
 #define CREATE_OP_NODE( OP, L, R ) CreateLngNode( OP_TYPE, 0, OP, NULL, L, R )
 
 #define CREATE_TYPE_NODE( TYPE ) CreateLngNode( TYPE, 0, -1, NULL )
