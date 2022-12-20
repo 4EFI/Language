@@ -198,8 +198,8 @@ Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 
 		Node* nodeTemp = NULL;
 
-		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;       }
-		else                   { nodeTemp = GetAddSub( nodes, curPos ); }
+		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;        }
+		else                   { nodeTemp = GetCompare( nodes, curPos ); }
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
 
@@ -231,7 +231,7 @@ Node* VarInitHandler( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 
-		nodeR = GetAddSub( nodes, curPos );
+		nodeR = GetCompare( nodes, curPos );
 	}
 
 	return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
@@ -279,7 +279,7 @@ Node* GetInitVar( Node** nodes, int* curPos )
 		return VarInitHandler( nodes, curPos );
 	}
 
-	return GetAddSub( nodes, curPos );
+	return GetCompare( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
@@ -297,12 +297,12 @@ Node* GetEqual( Node** nodes, int* curPos )
 		if( CUR_NODE_TYPE != EQ_TYPE )
 		{
 			PREV_TOKEN
-			return GetAddSub( nodes, curPos );
+			return GetCompare( nodes, curPos );
 		}
 		
 		NEXT_TOKEN
 
-		Node* nodeR = GetAddSub( nodes, curPos );
+		Node* nodeR = GetCompare( nodes, curPos );
 
 		return CREATE_TYPE_NODE_LR( EQ_TYPE, nodeL, nodeR );
 	}
@@ -327,7 +327,7 @@ Node* GetIf( Node** nodes, int* curPos )
 		isElse = false;
 		
 		NEXT_TOKEN
-		Node* nodeL = GetAddSub( nodes, curPos );
+		Node* nodeL = GetCompare( nodes, curPos );
 
 		ASSERT_L_BRACE // !:
 
@@ -382,7 +382,7 @@ Node* GetWhile( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 		
-		Node* nodeL = GetAddSub( nodes, curPos );
+		Node* nodeL = GetCompare( nodes, curPos );
 
 		ASSERT_L_BRACE // !:
 
@@ -394,6 +394,42 @@ Node* GetWhile( Node** nodes, int* curPos )
 	}
 
 	GetIf( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetCompare( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetCompare" );
+	LOG( "%d :", *curPos );
+
+	Node* node = GetAddSub( nodes, curPos ); 
+
+	while( CUR_NODE_TYPE == OP_TYPE && ( CUR_NODE_OP == OP_EE || 
+	                                     CUR_NODE_OP == OP_GE ||
+										 CUR_NODE_OP == OP_BE ||
+										 CUR_NODE_OP == OP_GT ||
+										 CUR_NODE_OP == OP_BT ||
+										 CUR_NODE_OP == OP_NE ) )
+	{
+		int op = CUR_NODE_OP;
+		NEXT_TOKEN
+
+		Node* nodeR = GetAddSub( nodes, curPos );
+		Node* nodeL = CopyLngNode( node );	
+
+		switch( op )
+		{
+			case OP_EE: return CREATE_OP_NODE( OP_EE, nodeL, nodeR );
+			case OP_GE: return CREATE_OP_NODE( OP_GE, nodeL, nodeR );
+			case OP_BE: return CREATE_OP_NODE( OP_BE, nodeL, nodeR );
+			case OP_GT: return CREATE_OP_NODE( OP_GT, nodeL, nodeR );
+			case OP_BT: return CREATE_OP_NODE( OP_BT, nodeL, nodeR );
+			case OP_NE: return CREATE_OP_NODE( OP_NE, nodeL, nodeR );
+		}
+	}
+
+	return node;
 }
 
 //-----------------------------------------------------------------------------
@@ -488,7 +524,7 @@ Node* GetBracket( Node** nodes, int* curPos )
 
 		LOG( "(" ); 
 		
-		Node* node = GetAddSub( nodes, curPos );
+		Node* node = GetCompare( nodes, curPos );
 		
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
 		NEXT_TOKEN

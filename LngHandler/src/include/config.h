@@ -80,7 +80,14 @@ enum OperationTypes
     OP_SIN = 8,
     OP_COS = 9,
 
-    OP_DEG = 11
+    OP_DEG = 11, 
+
+    OP_EE, 
+    OP_GE,
+    OP_BE,
+    OP_GT,
+    OP_BT,
+    OP_NE
 };
 
 static int UnaryOperations[] = 
@@ -102,14 +109,21 @@ struct OpStr
 
 static OpStr OpStrings[] = 
 {  
-    { OP_ADD, "+",   "ADD", "add" },
-    { OP_SUB, "-",   "SUB", "sub" },
-    { OP_MUL, "*",   "MUL", "mul" },
-    { OP_DIV, "/",   "DIV", "div" },
-    { OP_DEG, "^",   "POW", "pow" },
-    { OP_SIN, "sin", "SIN", "sin" },
-    { OP_COS, "cos", "COS", "cos" },
-    { OP_LN,  "ln",  "LN",  "ln"  }
+    { OP_ADD, "+",   "ADD",    "add"   },
+    { OP_SUB, "-",   "SUB",    "sub"   },
+    { OP_MUL, "*",   "MUL",    "mul"   },
+    { OP_DIV, "/",   "DIV",    "div"   },
+    { OP_DEG, "^",   "POW",    "pow"   },
+    { OP_SIN, "sin", "SIN",    "sin"   },
+    { OP_COS, "cos", "COS",    "cos"   },
+    { OP_LN,  "ln",  "LN",     "ln"    },
+
+    { OP_EE,  "==",  "IS_EE",  "is_ee" },
+    { OP_GE,  ">=",  "IS_GE",  "is_ge" },
+    { OP_BE,  "<=",  "IS_BE",  "is_be" },
+    { OP_GT,  ">",   "IS_GT",  "is_gt" },
+    { OP_BT,  "<",   "IS_BT",  "is_bt" },
+    { OP_NE,  "!=",  "IS_BT",  "is_ne" }
 };
 
 static const int NumOpStrings = sizeof( OpStrings ) / sizeof( OpStr );

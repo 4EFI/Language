@@ -26,6 +26,7 @@ Node* GetEqual       ( Node** nodes, int* curPos );
 Node* GetIf          ( Node** nodes, int* curPos );
 Node* GetElse        ( Node** nodes, int* curPos );
 Node* GetWhile       ( Node** nodes, int* curPos );
+Node* GetCompare     ( Node** nodes, int* curPos );
 Node* GetAddSub      ( Node** nodes, int* curPos );
 Node* GetMulDiv      ( Node** nodes, int* curPos );
 Node* GetPower       ( Node** nodes, int* curPos );
