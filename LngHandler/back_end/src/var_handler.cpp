@@ -54,7 +54,7 @@ int GetTableVarPos( const char* varName )
         }
     }
 
-    printf( "Variable \"%s\" does not exist...\n" );
+    printf( "Variable \"%s\" does not exist...\n", varName );
 
     assert( 0 );
     return  0;
