@@ -68,7 +68,7 @@ int AddVarToTable( const char* varName )
 
     int curTable  = StkVarTables.size - 1;
 
-    LOG( "%d", curTable );
+    LOG( "CurTable = %d", curTable );
 
     int curVarPos = StkVarTables.data[ curTable ]->numVars;
 

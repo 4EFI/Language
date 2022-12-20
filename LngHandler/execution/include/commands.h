@@ -150,9 +150,15 @@ DEF_CMD( COS, 20,
     S_PUSH( cos( val_1 ) );
 })
 
+DEF_CMD( POW, 21,
+{
+    S_POP_VALUES          
+    S_PUSH( pow( val_1, val_2 ) );
+})
+
 //-----------------------------------------------------------------------------
 
-DEF_CMD( PUSHI, 21,
+DEF_CMD( PUSHI, 22,
 {
     S_PUSH( int( arg_val ) );
 })
