@@ -55,7 +55,10 @@ enum Types
     
     FUNC_TYPE,
     PARAM_TYPE,
-    COMMA_TYPE, 
+    COMMA_TYPE,
+    TYPE_TYPE, 
+    CALL_TYPE,
+    RET_TYPE,
 
     IN_TYPE,
     OUT_TYPE
@@ -170,9 +173,12 @@ static TypeStr TypeStrings[] =
 
     { WHILE_TYPE, "живем", "WHILE" },
     
-    { FUNC_TYPE,  "FUNC",  "FUNC" },
-    { COMMA_TYPE, ",",     "" },
-    { PARAM_TYPE, "PARAM", "PARAM" },
+    { FUNC_TYPE,  "FUNC",   "FUNC" },
+    { COMMA_TYPE, ",",      "" },
+    { PARAM_TYPE, "PARAM",  "PARAM" },
+    { TYPE_TYPE,  "TYPE",   "TYPE" },
+    { CALL_TYPE,  "CALL",   "CALL" },
+    { RET_TYPE,   "ретерн", "RET" },
 
     { IN_TYPE,  "сканф",  "IN" }, 
     { OUT_TYPE, "принтф", "OUT" }
