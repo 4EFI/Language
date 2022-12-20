@@ -47,13 +47,14 @@ int TreeToAsm( Node* node, FILE* file )
 
     int isAsm = 0;
 
-    isAsm += MathExpressionToAsm( node, file );
-    isAsm += IfToAsm            ( node, file );
-    isAsm += WhileToAsm         ( node, file );
-    isAsm += VarInitToAsm       ( node, file );
-    isAsm += VarEqualToAsm      ( node, file );
+    isAsm += FuncToAsm          ( node, file );
     isAsm += InputToAsm         ( node, file );
     isAsm += OutputToAsm        ( node, file );
+    isAsm += WhileToAsm         ( node, file );
+    isAsm += IfToAsm            ( node, file );
+    isAsm += VarInitToAsm       ( node, file );
+    isAsm += VarEqualToAsm      ( node, file );
+    isAsm += MathExpressionToAsm( node, file );
 
     if( isAsm ) return 0;
     
@@ -245,6 +246,20 @@ int OutputToAsm( Node* node, FILE* file )
 
     return 1;
 }
+
+//-----------------------------------------------------------------------------
+
+int FuncToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != FUNC_TYPE ) return 0;
+
+    TreeToAsm( node->right, file );
+
+    return 1;
+}   
 
 //-----------------------------------------------------------------------------
 

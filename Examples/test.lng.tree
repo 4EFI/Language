@@ -1,1 +1,1 @@
-{ ST { FUNC { PARAM { VAR { "a" } { NIL } } { PARAM { VAR { "b" } { NIL } } { NIL } } } { ST { WHILE { "x" } { ST { 1000 } { ST { EQ { "x" } { SUB { "x" } { 1 } } } { NIL } } } } { NIL } } } { ST { VAR { "x" } { 1 } } { ST { VAR { "y" } { 10 } } { NIL } } } } 
+{ ST { FUNC { "Mein" { NIL } { VAR } } { ST { VAR { "a" } { 0 } } { ST { VAR { "b" } { 0 } } { ST { VAR { "ts" } { 0 } } { ST { IN { PARAM { "a" } { PARAM { "b" } { PARAM { "ts" } { NIL } } } } { NIL } } { ST { OUT { PARAM { "a" } { PARAM { "b" } { PARAM { "ts" } { NIL } } } } { NIL } } { NIL } } } } } } } { NIL } } 

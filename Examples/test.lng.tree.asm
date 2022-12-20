@@ -1,51 +1,68 @@
 push rax
 push 0
 add
-pop rbx ; set "x" pos
+pop rbx ; set "a" pos
 
-push 1
-pop [ rbx ] ; set "x"
+push 0
+pop [ rbx ] ; set "a"
 
 push rax
 push 1
 add
-pop rbx ; set "y" pos
+pop rbx ; set "b" pos
 
-push 10
-pop [ rbx ] ; set "y"
+push 0
+pop [ rbx ] ; set "b"
 
+push rax
+push 2
+add
+pop rbx ; set "ts" pos
 
-while001:
+push 0
+pop [ rbx ] ; set "ts"
+
+in
 push rax
 push 0
 add
-pop rbx ; set "x" pos
+pop rbx ; set "a" pos
 
-push [ rbx ] ; push "x"
+pop [ rbx ]
+in
+push rax
+push 1
+add
+pop rbx ; set "b" pos
+
+pop [ rbx ]
+in
+push rax
+push 2
+add
+pop rbx ; set "ts" pos
+
+pop [ rbx ]
+push rax
 push 0
-je :endWhile001
+add
+pop rbx ; set "a" pos
 
-push 1000
+push [ rbx ] ; push "a"
 out
 push rax
-push 0
-add
-pop rbx ; set "x" pos
-
-push [ rbx ] ; push "x"
 push 1
-sub
-push rax
-push 0
 add
-pop rbx ; set "x" pos
+pop rbx ; set "b" pos
 
-pop [ rbx ] ; set "x"
+push [ rbx ] ; push "b"
+out
+push rax
+push 2
+add
+pop rbx ; set "ts" pos
 
-
-jmp :while001
-endWhile001:
-
+push [ rbx ] ; push "ts"
 out
 
 hlt
