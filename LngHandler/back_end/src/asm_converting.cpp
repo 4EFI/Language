@@ -29,8 +29,6 @@ int TreeToAsmConverting( Node* node, FILE* file )
 
     TreeToAsm( node, file );
 
-    fprintf( file, "\nout\n" ); // for test !!!! (DELETE IT!!)
-
     fprintf( file, "\nhlt\n" );
 
     return 1;
@@ -54,6 +52,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += WhileToAsm         ( node, file );
     isAsm += VarInitToAsm       ( node, file );
     isAsm += VarEqualToAsm      ( node, file );
+    isAsm += OutputToAsm        ( node, file );
 
     if( isAsm ) return 0;
     
@@ -220,6 +219,40 @@ int VarEqualToAsm( Node* node, FILE* file )
     VarRAMPosToAsm( L_VAR, pos, file );
 
     fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int OutputToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != OUT_TYPE ) return 0;
+
+    ParamsToAsm( node->left, file );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int ParamsToAsm( Node* node, FILE* file )
+{
+    ASSERT( node != NULL, 0 );    
+    ASSERT( file != NULL, 0 );
+
+    if( NODE_TYPE != PARAM_TYPE ) return 0;
+
+    // VarInitToAsm( node, file );
+
+    if( node->left  ) MathExpressionToAsm( node->left,  file );
+
+    fprintf( file, "out\n" );
+
+    if( node->right ) ParamsToAsm        ( node->right, file );
 
     return 1;
 }

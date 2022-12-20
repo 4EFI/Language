@@ -15,6 +15,8 @@ int IfToAsm            ( Node* node, FILE* file );
 int WhileToAsm         ( Node* node, FILE* file );
 int VarInitToAsm       ( Node* node, FILE* file );
 int VarEqualToAsm      ( Node* node, FILE* file );
+int OutputToAsm        ( Node* node, FILE* file );
+int ParamsToAsm        ( Node* node, FILE* file );
 
 int VarRAMPosToAsm( const char* varName, int pos, FILE* file );
 
