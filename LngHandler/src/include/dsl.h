@@ -48,6 +48,7 @@
 #define CUR_NODE nodes[*curPos]
 #define CUR_NODE_TYPE CUR_NODE->value->type
 #define CUR_NODE_OP   CUR_NODE->value->opValue
+#define CUR_NODE_VAR  CUR_NODE->value->varValue
 
 #define NODE_TYPE node->value->type
 #define NODE_OP   node->value->opValue
@@ -56,6 +57,9 @@
 
 #define PREV_TOKEN (*curPos)--;
 #define NEXT_TOKEN (*curPos)++;
+
+#define ASSERT_L_BRACE assert( CUR_NODE_TYPE == L_BRACE_TYPE ); NEXT_TOKEN; // !: 
+#define ASSERT_R_BRACE assert( CUR_NODE_TYPE == R_BRACE_TYPE ); NEXT_TOKEN; // :! 
 
 // +
 #define ADD( L, R ) CREATE_OP_NODE( OP_ADD, L, R )

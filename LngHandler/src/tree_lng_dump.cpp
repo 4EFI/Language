@@ -16,7 +16,7 @@ FILE* FileLngDump = fopen( FileLngDumpName, "w" );
 
 int PrintOperation( char* str, int numOp )
 {
-    ASSERT( str        != NULL, 0 );
+    ASSERT( str != NULL, 0 );
 
     int indOp = GetIndexOperation( numOp );     
     if( indOp == -1 ) return -1; 
@@ -33,27 +33,37 @@ int PrintLngNode( char* str, Node* node, int typePrinting )
 
     if/* */( node->value->type == VAL_TYPE )
     {
+        LOG( "Val" );
+        
         sprintf( str, "%g", node->value->dblValue );
         return VAL_TYPE;
     }
     else if( node->value->type == OP_TYPE )
     {   
+        LOG( "OP" );
+        
         PrintOperation( str, node->value->opValue );
         return OP_TYPE;
     }
     else if( node->value->type == VAR_TYPE )
     {
-        if( typePrinting == DUMP ) sprintf( str,   "%s",   node->value->varValue );
-        else                       sprintf( str, "\"%s\"", node->value->varValue );
+        char* varName = node->value->varValue;   
+        if(  !varName  ) return -1; 
+        
+        if( typePrinting == DUMP ) sprintf( str,   "%s",   varName );
+        else                       sprintf( str, "\"%s\"", varName );
 
         return VAR_TYPE;
     }
     else
     {
         int type = node->value->type; 
+        int ind  = GetIndexType( type );
+
+        LOG( "ind = %d", ind );
         
-        if( typePrinting == DUMP ) sprintf( str, "%s", TypeStrings[ GetIndexType( type ) ].str         ); 
-        else                       sprintf( str, "%s", TypeStrings[ GetIndexType( type ) ].strStandart ); 
+        if( typePrinting == DUMP ) sprintf( str, "%s", TypeStrings[ ind ].str         ); 
+        else                       sprintf( str, "%s", TypeStrings[ ind ].strStandart ); 
 
         return type;
     }
@@ -77,8 +87,12 @@ int PrintDotNode( Node* node, int nodeNum, FILE* dotFile, int side )
     else if( typeNum == Types::VAR_TYPE ) { color = "lightblue"   ; }
     else                                  { color = "lightyellow" ; }
 
+    LOG( "(" );
+
     char valueStr[ MaxStrLen ] = "";
     PrintLngNode( valueStr, node );
+
+    LOG( ")" );
 
     if( side == LR )
     {
@@ -86,7 +100,7 @@ int PrintDotNode( Node* node, int nodeNum, FILE* dotFile, int side )
                             nodeNum, color, node->parent, node, valueStr );   
     }
     else
-    {
+    {       
         fprintf( dotFile, "\tnode%d[ shape = record, style = \"filled\", fillcolor = \"%s\", label = \"{ p: %p | n: %p | { %s } }\" ];\n", 
                            nodeNum, color, node->parent, node, valueStr );   
     }

@@ -8,7 +8,9 @@
 Node* GetLngTree( const char* str );
 
 Node* GetGrammar     ( Node** nodes, int* curPos );
-Node* GetStatememt   ( Node** nodes, int* curPos );
+Node* GetStatement   ( Node** nodes, int* curPos );
+Node* GetFunction    ( Node** nodes, int* curPos );
+Node* GetParams      ( Node** nodes, int* curPos );
 Node* GetInitVar     ( Node** nodes, int* curPos );
 Node* GetEqual       ( Node** nodes, int* curPos );
 Node* GetIf          ( Node** nodes, int* curPos );

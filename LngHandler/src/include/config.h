@@ -41,6 +41,9 @@ enum Types
     L_BRACKET_TYPE, // (
     R_BRACKET_TYPE, // )
 
+    L_BRACE_TYPE,
+    R_BRACE_TYPE,
+
     VAR_INIT_TYPE,
 
     EQ_TYPE,
@@ -48,7 +51,11 @@ enum Types
     IF_TYPE,
     ELSE_TYPE, 
 
-    WHILE_TYPE
+    WHILE_TYPE, 
+    
+    FUNC_TYPE,
+    PARAM_TYPE,
+    COMMA_TYPE
 };
 
 //-----------------------------------------------------------------------------
@@ -127,6 +134,9 @@ static TypeStr TypeStrings[] =
     
     { L_COMMENT_TYPE, "/*", "" },
     { R_COMMENT_TYPE, "*/", "" },
+
+    { L_BRACE_TYPE, "!:", "" },
+    { R_BRACE_TYPE, ":!", "" },
     
     { L_BRACKET_TYPE, "(", "" },
     { R_BRACKET_TYPE, ")", "" },
@@ -137,7 +147,11 @@ static TypeStr TypeStrings[] =
     { IF_TYPE,   "проверочка", "IF" },
     { ELSE_TYPE, "иначе", "ELSE" },
 
-    { WHILE_TYPE, "живем", "WHILE" }
+    { WHILE_TYPE, "живем", "WHILE" },
+    
+    { FUNC_TYPE,  "FUNC",  "FUNC" },
+    { COMMA_TYPE, ",",     "" },
+    { PARAM_TYPE, "PARAM", "PARAM" }
 };
 
 static const int NumTypeStrings = sizeof( TypeStrings ) / sizeof( TypeStr );
