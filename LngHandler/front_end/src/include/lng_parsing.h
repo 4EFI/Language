@@ -1,9 +1,15 @@
 #ifndef LNG_READER_H
 #define LNG_READER_H
 
+#include "tree_lng.h"
+
 //-----------------------------------------------------------------------------
 
-#include "tree_lng.h"
+enum  
+{
+    IN, 
+    OUT
+};
 
 Node* GetLngTree( const char* str );
 
@@ -13,6 +19,7 @@ Node* GetFunction    ( Node** nodes, int* curPos );
 Node* GetParams      ( Node** nodes, int* curPos );
 Node* GetInput       ( Node** nodes, int* curPos );
 Node* GetOutput      ( Node** nodes, int* curPos );
+Node* GetInOutParams ( Node** nodes, int* curPos, int typeParams );
 Node* GetCallParam   ( Node** nodes, int* curPos );
 Node* GetInitVar     ( Node** nodes, int* curPos );
 Node* GetEqual       ( Node** nodes, int* curPos );

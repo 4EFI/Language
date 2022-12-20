@@ -63,6 +63,9 @@
 #define ASSERT_L_BRACE assert( CUR_NODE_TYPE == L_BRACE_TYPE ); NEXT_TOKEN; // !: 
 #define ASSERT_R_BRACE assert( CUR_NODE_TYPE == R_BRACE_TYPE ); NEXT_TOKEN; // :! 
 
+#define ASSERT_L_BRACKET assert( CUR_NODE_TYPE == L_BRACKET_TYPE ); NEXT_TOKEN; // ( 
+#define ASSERT_R_BRACKET assert( CUR_NODE_TYPE == R_BRACKET_TYPE ); NEXT_TOKEN; // )
+
 // +
 #define ADD( L, R ) CREATE_OP_NODE( OP_ADD, L, R )
 // -

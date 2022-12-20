@@ -156,8 +156,8 @@ static TypeStr TypeStrings[] =
     { COMMA_TYPE, ",",     "" },
     { PARAM_TYPE, "PARAM", "PARAM" },
 
-    { IN_TYPE,  "IN",  "IN" }, 
-    { OUT_TYPE, "OUT", "OUT" }
+    { IN_TYPE,  "сканф",  "IN" }, 
+    { OUT_TYPE, "принтф", "OUT" }
 };
 
 static const int NumTypeStrings = sizeof( TypeStrings ) / sizeof( TypeStr );

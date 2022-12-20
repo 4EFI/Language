@@ -106,13 +106,12 @@ Node* GetFunction( Node** nodes, int* curPos )
 			return GetInitVar( nodes, curPos ); 
 		}
 
-		assert( CUR_NODE_TYPE == L_BRACKET_TYPE ); // (
-		NEXT_TOKEN
+		// Get params
+		ASSERT_L_BRACKET // (
 
         Node* nodeL = GetParams( nodes, curPos );
 
-		assert( CUR_NODE_TYPE == R_BRACKET_TYPE ); // )
-		NEXT_TOKEN
+		ASSERT_R_BRACKET // )
 
 		// Get body
 		ASSERT_L_BRACE // !:
@@ -145,12 +144,21 @@ Node* GetInput( Node** nodes, int* curPos )
 
 Node* GetOutput( Node** nodes, int* curPos )
 {
-	LOG( "Enter GetInput" );
+	LOG( "Enter GetOutput" );
 	LOG( "%d :", *curPos );
 
 	if( CUR_NODE_TYPE == OUT_TYPE )
 	{
+		NEXT_TOKEN
 		
+		// Get params
+		ASSERT_L_BRACKET // (
+
+        Node* nodeL = GetInOutParams( nodes, curPos, OUT );
+
+		ASSERT_R_BRACKET // )
+
+		return CREATE_TYPE_NODE_LR( OUT_TYPE, nodeL, NULL );
 	}
 	
 	return GetInput( nodes, curPos );
@@ -158,9 +166,9 @@ Node* GetOutput( Node** nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetCallParam( Node** nodes, int* curPos )
+Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 {
-	LOG( "Enter GetCallParam" );
+	LOG( "Enter GetOutParams" );
 	LOG( "%d :", *curPos );
 
 	Node* node     = NULL;
@@ -168,26 +176,29 @@ Node* GetCallParam( Node** nodes, int* curPos )
 
 	int isNewParam = false;
 
-	while( CUR_NODE_TYPE == VAR_TYPE || 
-	       CUR_NODE_TYPE == VAL_TYPE || 
-		   isNewParam )
-	{
+	while(   
+		   CUR_NODE_TYPE == VAR_TYPE                        ||
+		 ( CUR_NODE_TYPE == VAL_TYPE && typeParams == OUT )	|| 
+	       isNewParam 
+		 )
+	{	
 		if( node ) assert( isNewParam == true );
-		
-		Node* nodeTemp  = GetAddSub( nodes, curPos );
+
+		Node* nodeTemp = NULL;
+
+		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;       }
+		else                   { nodeTemp = GetAddSub( nodes, curPos ); }
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
 
 		if( !lastNode ) { node            = nodeParam; lastNode = node;            }
 		else            { lastNode->right = nodeParam; lastNode = lastNode->right; }
-
-		lastNode->right = nodeParam; 
-		lastNode        = lastNode->right;
 		
 		if( CUR_NODE_TYPE == COMMA_TYPE ) { isNewParam = true;  NEXT_TOKEN }
 		else                              { isNewParam = false;            }
 	}
 
+	assert( node != NULL );
 	return  node;
 }
 
