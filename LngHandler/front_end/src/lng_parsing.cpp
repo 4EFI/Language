@@ -159,7 +159,7 @@ Node* GetParams( Node** nodes, int* curPos )
 	Node* lastNode = NULL;
 
 	int isNewParam = false;
-	
+
 	while( CUR_NODE_TYPE == VAR_INIT_TYPE || isNewParam )
 	{
 		if( node ) assert( isNewParam == true );
@@ -404,7 +404,7 @@ Node* GetBracket( Node** nodes, int* curPos )
 	{				
 		NEXT_TOKEN
 
-		LOG( "(" );
+		LOG( "(" ); 
 		
 		Node* node = GetAddSub( nodes, curPos );
 		
