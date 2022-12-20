@@ -67,20 +67,22 @@
 #define ASSERT_R_BRACKET assert( CUR_NODE_TYPE == R_BRACKET_TYPE ); NEXT_TOKEN; // )
 
 // +
-#define ADD( L, R ) CREATE_OP_NODE( OP_ADD, L, R )
+#define ADD(  L, R ) CREATE_OP_NODE( OP_ADD,  L, R )
 // -
-#define SUB( L, R ) CREATE_OP_NODE( OP_SUB, L, R )
+#define SUB(  L, R ) CREATE_OP_NODE( OP_SUB,  L, R )
 // *
-#define MUL( L, R ) CREATE_OP_NODE( OP_MUL, L, R )
+#define MUL(  L, R ) CREATE_OP_NODE( OP_MUL,  L, R )
 // /
-#define DIV( L, R ) CREATE_OP_NODE( OP_DIV, L, R )
+#define DIV(  L, R ) CREATE_OP_NODE( OP_DIV,  L, R )
 // sin
-#define SIN( L, R ) CREATE_OP_NODE( OP_SIN, L, R )
-// cos
-#define COS( L, R ) CREATE_OP_NODE( OP_COS, L, R )
+#define SIN(  L, R ) CREATE_OP_NODE( OP_SIN,  L, R )
+// cos 
+#define COS(  L, R ) CREATE_OP_NODE( OP_COS,  L, R )
 // ^
-#define POW( L, R ) CREATE_OP_NODE( OP_DEG, L, R )
+#define POW(  L, R ) CREATE_OP_NODE( OP_DEG,  L, R )
 // ln
-#define LN(  L, R ) CREATE_OP_NODE( OP_LN,  L, R ) 
+#define LN(   L, R ) CREATE_OP_NODE( OP_LN,   L, R ) 
+// sqrt
+#define SQRT( L, R ) CREATE_OP_NODE( OP_SQRT, L, R ) 
 
 #endif

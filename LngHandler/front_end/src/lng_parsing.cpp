@@ -191,6 +191,7 @@ Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 	while(   
 		   CUR_NODE_TYPE == VAR_TYPE                        ||
 		 ( CUR_NODE_TYPE == VAL_TYPE && typeParams == OUT )	|| 
+	     ( CUR_NODE_TYPE == OP_TYPE  && typeParams == OUT ) ||
 	       isNewParam 
 		 )
 	{	
@@ -554,9 +555,10 @@ Node* GetStrMathsFunc( Node** nodes, int* curPos ) // sin cos ln
 	
 	switch( op )
 	{
-		case OP_SIN: return SIN( NULL, nodeR );
-		case OP_COS: return COS( NULL, nodeR );
-		case OP_LN:  return LN ( NULL, nodeR );
+		case OP_SIN:  return SIN ( NULL, nodeR );
+		case OP_COS:  return COS ( NULL, nodeR );
+		case OP_LN:   return LN  ( NULL, nodeR );
+		case OP_SQRT: return SQRT( NULL, nodeR );
 	}
 
 	return GetVar( nodes, curPos );

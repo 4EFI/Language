@@ -82,6 +82,8 @@ enum OperationTypes
 
     OP_DEG = 11, 
 
+    OP_SQRT = 13,
+
     OP_EE, 
     OP_GE,
     OP_BE,
@@ -94,7 +96,8 @@ static int UnaryOperations[] =
 {
     OP_SIN,
     OP_COS,
-    OP_LN
+    OP_LN,
+    OP_SQRT
 };
 
 static const int NumUnaryOperations = sizeof( UnaryOperations ) / sizeof( int ); 
@@ -109,21 +112,22 @@ struct OpStr
 
 static OpStr OpStrings[] = 
 {  
-    { OP_ADD, "+",   "ADD",    "add"   },
-    { OP_SUB, "-",   "SUB",    "sub"   },
-    { OP_MUL, "*",   "MUL",    "mul"   },
-    { OP_DIV, "/",   "DIV",    "div"   },
-    { OP_DEG, "^",   "POW",    "pow"   },
-    { OP_SIN, "sin", "SIN",    "sin"   },
-    { OP_COS, "cos", "COS",    "cos"   },
-    { OP_LN,  "ln",  "LN",     "ln"    },
+    { OP_ADD,  "+",   "ADD",    "add"   },
+    { OP_SUB,  "-",   "SUB",    "sub"   },
+    { OP_MUL,  "*",   "MUL",    "mul"   },
+    { OP_DIV,  "/",   "DIV",    "div"   },
+    { OP_DEG,  "^",   "POW",    "pow"   },
+    { OP_SIN,  "син", "SIN",    "sin"   },
+    { OP_COS,  "кос", "COS",    "cos"   },
+    { OP_LN,   "лог", "LN",     "ln"    },
+    { OP_SQRT, "кор", "SQRT",   "sqrt"  },
 
-    { OP_EE,  "==",  "IS_EE",  "is_ee" },
-    { OP_GE,  ">=",  "IS_GE",  "is_ge" },
-    { OP_BE,  "<=",  "IS_BE",  "is_be" },
-    { OP_GT,  ">",   "IS_GT",  "is_gt" },
-    { OP_BT,  "<",   "IS_BT",  "is_bt" },
-    { OP_NE,  "!=",  "IS_BT",  "is_ne" }
+    { OP_EE,   "==",  "IS_EE",  "is_ee" },
+    { OP_GE,   ">=",  "IS_GE",  "is_ge" },
+    { OP_BE,   "<=",  "IS_BE",  "is_be" },
+    { OP_GT,   ">",   "IS_GT",  "is_gt" },
+    { OP_BT,   "<",   "IS_BT",  "is_bt" },
+    { OP_NE,   "!=",  "IS_BT",  "is_ne" }
 };
 
 static const int NumOpStrings = sizeof( OpStrings ) / sizeof( OpStr );
