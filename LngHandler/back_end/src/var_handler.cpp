@@ -18,15 +18,51 @@ Stack StkVarTables = { 0 };
 
 //-----------------------------------------------------------------------------
 
-int AddLocalVarsBlock()
+int AddLocalVarsBlock( FILE* file, int isNewFunc )
 {
+    ASSERT( file != NULL, 0 );
+    
     static int isStkEmpty = true;
     if(        isStkEmpty        ) { isStkEmpty = false; StackCtor( &StkVarTables, 1 ); }
 
-    VarTable* varTable = ( VarTable* )calloc( 1, sizeof( VarTable ) );
-    varTable->numVars  = 0;
+    VarTable* varTable  = ( VarTable* )calloc( 1, sizeof( VarTable ) );
+    varTable->numVars   = 0;
+    varTable->isNewFunc = false;
     
     StackPush( &StkVarTables, varTable );
+
+    int stkSize = StkVarTables.size;
+    if( stkSize > 1 ) // Shift rax
+    {
+        fprintf( file, "push %d\n", StkVarTables.data[ stkSize - 2 ]->numVars );
+        fprintf( file, "push rax\n" );
+        fprintf( file, "add\n" );
+        fprintf( file, "pop rax ; Shifting top the var register\n" );
+
+        LOG( "New block" );
+    }
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int RemoveLocalVarsBlock( FILE* file )
+{
+    ASSERT( file != NULL, 0 );
+
+    StackPop( &StkVarTables );
+
+    int stkSize = StkVarTables.size;
+    if( stkSize > 0 )
+    {
+        fprintf( file, "push %d\n", -StkVarTables.data[ stkSize - 1 ]->numVars );
+        fprintf( file, "push rax\n" );
+        fprintf( file, "add\n" );
+        fprintf( file, "pop rax ; Shifting down the var register\n" );
+        
+        LOG( "Remove block" );
+    }
 
     return 1;
 }
@@ -37,9 +73,10 @@ int GetTableVarPos( const char* varName )
 {
     ASSERT( varName != NULL, 0 );
 
-    int numBack = 0;
+    int numBack        = 0;
+    int indexLastBlock = StkVarTables.size - 1;
 
-    for( int curTable = StkVarTables.size - 1; curTable >= 0; curTable-- )
+    for( int curTable = indexLastBlock; curTable >= 0; curTable-- )
     {        
         int curTableSize = StkVarTables.data[ curTable ]->numVars;
         
@@ -49,9 +86,14 @@ int GetTableVarPos( const char* varName )
             
             if( !strcmp( varName, curVarName ) )
             {
-                return i /* - numBack */ ;
+                // LOG( "\"%s\" pos = %d ; num vars = %d", varName, -( numBack + curTableSize - i ), curTableSize );  
+                
+                if( curTable == indexLastBlock ) { return i; }
+                else                             { return -( numBack + curTableSize - i ); } 
             }
         }
+
+        if( curTable != indexLastBlock ) numBack += curTableSize; // If not the last local block
     }
 
     printf( "Variable \"%s\" does not exist...\n", varName );

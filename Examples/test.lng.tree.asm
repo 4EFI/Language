@@ -1,60 +1,23 @@
+push 0
+push rax
+add
+pop rax ; Shifting top the var register
 push rax
 push 0
-add
-pop rbx ; set "a" pos
-
-push 0
-pop [ rbx ] ; set "a"
-
-push rax
-push 1
-add
-pop rbx ; set "b" pos
-
-push 0
-pop [ rbx ] ; set "b"
-
-push rax
-push 2
-add
-pop rbx ; set "ts" pos
-
-push 0
-pop [ rbx ] ; set "ts"
-
-in
-push rax
-push 0
-add
-pop rbx ; set "a" pos
-
-pop [ rbx ]
-in
-push rax
-push 1
-add
-pop rbx ; set "b" pos
-
-pop [ rbx ]
-in
-push rax
-push 2
-add
-pop rbx ; set "ts" pos
-
-pop [ rbx ]
-push rax
-push 3
 add
 pop rbx ; set "i" pos
 
 push 0
 pop [ rbx ] ; set "i"
 
+push 1
+push rax
+add
+pop rax ; Shifting top the var register
 
 while001:
 push rax
-push 3
+push -1
 add
 pop rbx ; set "i" pos
 
@@ -65,29 +28,59 @@ push 0
 je :endWhile001
 
 push rax
-push 2
+push 0
 add
-pop rbx ; set "ts" pos
+pop rbx ; set "lokal" pos
 
-push [ rbx ] ; push "ts"
+push 11
+pop [ rbx ] ; set "lokal"
+
+push rax
+push -1
+add
+pop rbx ; set "i" pos
+
+push [ rbx ] ; push "i"
 out
+push 1
 push rax
-push 2
 add
-pop rbx ; set "ts" pos
-
-push [ rbx ] ; push "ts"
-push 2
-pow
+pop rax ; Shifting top the var register
 push rax
-push 2
+push -2
 add
-pop rbx ; set "ts" pos
+pop rbx ; set "i" pos
 
-pop [ rbx ] ; set "ts"
+push [ rbx ] ; push "i"
+push 2
+sub
+push 0
+je :endif001
 
 push rax
-push 3
+push 0
+add
+pop rbx ; set "opa" pos
+
+push 500
+pop [ rbx ] ; set "opa"
+
+push rax
+push 0
+add
+pop rbx ; set "opa" pos
+
+push [ rbx ] ; push "opa"
+out
+
+endif001:
+
+push -1
+push rax
+add
+pop rax ; Shifting down the var register
+push rax
+push -1
 add
 pop rbx ; set "i" pos
 
@@ -95,7 +88,7 @@ push [ rbx ] ; push "i"
 push 1
 add
 push rax
-push 3
+push -1
 add
 pop rbx ; set "i" pos
 
@@ -105,5 +98,13 @@ pop [ rbx ] ; set "i"
 jmp :while001
 endWhile001:
 
+push -1
+push rax
+add
+pop rax ; Shifting down the var register
+push 0
+push rax
+add
+pop rax ; Shifting down the var register
 
 hlt

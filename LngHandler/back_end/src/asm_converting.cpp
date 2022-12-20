@@ -25,7 +25,7 @@ int TreeToAsmConverting( Node* node, FILE* file )
     ASSERT( node != NULL, 0 );    
     ASSERT( file != NULL, 0 );
 
-    AddLocalVarsBlock();
+    AddLocalVarsBlock( file );
 
     TreeToAsm( node, file );
 
@@ -122,11 +122,11 @@ int IfToAsm( Node* node, FILE* file )
 
     ifCount++;
 
+    AddLocalVarsBlock( file );    // {
+
     MathExpressionToAsm( node->left, file );
 
     fprintf( file, "push 0\nje :endif%03d\n\n", ifCount );
-
-    AddLocalVarsBlock(); // {
 
     int isElse = ( ( IS_R_EXISTS && R_TYPE == ELSE_TYPE ) ? 1 : 0 );     
     if( isElse )
@@ -138,18 +138,18 @@ int IfToAsm( Node* node, FILE* file )
         TreeToAsm( node->right, file );
     }
 
-    // Remove }
-
     fprintf( file, "\nendif%03d:\n\n", ifCount );
 
     if( isElse )
     {
-        AddLocalVarsBlock(); // {
+        AddLocalVarsBlock( file );    // {
 
         TreeToAsm( node->right->right, file );
 
-        // }
+        RemoveLocalVarsBlock( file ); // }
     }
+
+    RemoveLocalVarsBlock( file ); // }
 
     return 1;
 }
@@ -167,6 +167,8 @@ int WhileToAsm( Node* node, FILE* file )
 
     whileCount++;
 
+    AddLocalVarsBlock( file );    // {
+
     // While start
     fprintf( file, "\nwhile%03d:\n", whileCount );
 
@@ -177,6 +179,8 @@ int WhileToAsm( Node* node, FILE* file )
     TreeToAsm( node->right, file );
 
     fprintf( file, "\njmp :while%03d\n" "endWhile%03d:\n\n", whileCount, whileCount );
+
+    RemoveLocalVarsBlock( file ); // }
 
     return 1;
 }
@@ -228,7 +232,7 @@ int InputToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != IN_TYPE ) return 0;
 
-    ParamsToAsm( node->left, file, IN );
+    CallParamsToAsm( node->left, file, IN );
 
     return 1;
 }
@@ -242,7 +246,7 @@ int OutputToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != OUT_TYPE ) return 0;
 
-    ParamsToAsm( node->left, file, OUT );
+    CallParamsToAsm( node->left, file, OUT );
 
     return 1;
 }
@@ -256,14 +260,18 @@ int FuncToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != FUNC_TYPE ) return 0;
 
+    AddLocalVarsBlock( file, true ); // {
+
     TreeToAsm( node->right, file );
+
+    RemoveLocalVarsBlock( file );    // }
 
     return 1;
 }   
 
 //-----------------------------------------------------------------------------
 
-int ParamsToAsm( Node* node, FILE* file, int typeParams )
+int CallParamsToAsm( Node* node, FILE* file, int typeParams )
 {
     ASSERT( node != NULL, 0 );    
     ASSERT( file != NULL, 0 );
@@ -283,7 +291,12 @@ int ParamsToAsm( Node* node, FILE* file, int typeParams )
     if( typeParams == OUT ) fprintf( file, "out\n" );
     if( typeParams == IN  ) fprintf( file, "pop [ rbx ]\n" ); // set var
 
-    if( node->right ) ParamsToAsm( node->right, file, typeParams );
+    if( node->right ) CallParamsToAsm( node->right, file, typeParams );
+    
+    if( node->left  ) 
+    {
+        if( typeParams == FUNC ) MathExpressionToAsm( node->left, file );
+    }
 
     return 1;
 }
