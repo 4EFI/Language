@@ -162,6 +162,8 @@ Node* GetParams( Node** nodes, int* curPos )
 	
 	while( CUR_NODE_TYPE == VAR_INIT_TYPE || isNewParam )
 	{
+		if( node ) assert( isNewParam == true );
+		
 		Node* nodeVar   = VarInitHandler( nodes, curPos );
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeVar, NULL );
@@ -173,6 +175,10 @@ Node* GetParams( Node** nodes, int* curPos )
 		{
 			isNewParam = true;
 			NEXT_TOKEN
+		}
+		else
+		{
+			isNewParam = false;
 		}
 	}
 
