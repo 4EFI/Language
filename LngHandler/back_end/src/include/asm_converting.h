@@ -23,6 +23,7 @@ int VarInitToAsm       ( Node* node, FILE* file );
 int VarEqualToAsm      ( Node* node, FILE* file );
 int InputToAsm         ( Node* node, FILE* file );
 int OutputToAsm        ( Node* node, FILE* file );
+int FuncParamsToAsm    ( Node* node, FILE* file );
 int FuncToAsm          ( Node* node, FILE* file );
 int CallParamsToAsm    ( Node* node, FILE* file, int typeParams );
 
