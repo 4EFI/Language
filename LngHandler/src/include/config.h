@@ -57,6 +57,7 @@ enum Types
     PARAM_TYPE,
     COMMA_TYPE,
     TYPE_TYPE, 
+    VOID_TYPE, 
     CALL_TYPE,
     RET_TYPE,
 
@@ -177,6 +178,7 @@ static TypeStr TypeStrings[] =
     { COMMA_TYPE, ",",      "" },
     { PARAM_TYPE, "PARAM",  "PARAM" },
     { TYPE_TYPE,  "TYPE",   "TYPE" },
+    { VOID_TYPE,  "войд",   "VOID" },
     { CALL_TYPE,  "CALL",   "CALL" },
     { RET_TYPE,   "ретерн", "RET" },
 

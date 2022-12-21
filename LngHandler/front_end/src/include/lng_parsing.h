@@ -5,16 +5,14 @@
 
 //-----------------------------------------------------------------------------
 
-enum  
-{
-    IN, 
-    OUT
-};
+enum { IN, OUT };
 
 Node* GetLngTree( const char* str );
 
 Node* GetGrammar     ( Node** nodes, int* curPos );
 Node* GetStatement   ( Node** nodes, int* curPos );
+Node* GetCallParams  ( Node** nodes, int* curPos );
+Node* GetCallFunction( Node** nodes, int* curPos, int isRet = false ); // x = func ( 5 ) => isRet = true
 Node* GetFunction    ( Node** nodes, int* curPos );
 Node* GetParams      ( Node** nodes, int* curPos );
 Node* GetInput       ( Node** nodes, int* curPos );

@@ -88,9 +88,11 @@ Node* GetFunction( Node** nodes, int* curPos )
 	
 	int oldCurPos = *curPos;
 	
-	if( CUR_NODE_TYPE == VAR_INIT_TYPE )
+	if( CUR_NODE_TYPE == VAR_INIT_TYPE || 
+        CUR_NODE_TYPE == VOID_TYPE )
     {
-		Node* nodeType = CUR_NODE;
+		Node* nodeType = ( CUR_NODE_TYPE == VAR_INIT_TYPE ? CREATE_TYPE_NODE( TYPE_TYPE ) : 
+		                                                    CREATE_TYPE_NODE( VOID_TYPE ) );
 		
 		NEXT_TOKEN
 		assert( CUR_NODE_TYPE == VAR_TYPE );
@@ -199,8 +201,8 @@ Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 
 		Node* nodeTemp = NULL;
 
-		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;        }
-		else                   { nodeTemp = GetCompare( nodes, curPos ); }
+		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;                   }
+		else                   { nodeTemp = GetCallFunction( nodes, curPos, true ); }
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
 
@@ -232,7 +234,7 @@ Node* VarInitHandler( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 
-		nodeR = GetCompare( nodes, curPos );
+		nodeR = GetCallFunction( nodes, curPos, true );
 	}
 
 	return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
@@ -298,12 +300,12 @@ Node* GetEqual( Node** nodes, int* curPos )
 		if( CUR_NODE_TYPE != EQ_TYPE )
 		{
 			PREV_TOKEN
-			return GetCompare( nodes, curPos );
+			return GetCallFunction( nodes, curPos, false );
 		}
 		
 		NEXT_TOKEN
 
-		Node* nodeR = GetCompare( nodes, curPos );
+		Node* nodeR = GetCallFunction( nodes, curPos, true );
 
 		return CREATE_TYPE_NODE_LR( EQ_TYPE, nodeL, nodeR );
 	}
@@ -328,7 +330,7 @@ Node* GetIf( Node** nodes, int* curPos )
 		isElse = false;
 		
 		NEXT_TOKEN
-		Node* nodeL = GetCompare( nodes, curPos );
+		Node* nodeL = GetCallFunction( nodes, curPos, true );
 
 		ASSERT_L_BRACE // !:
 
@@ -383,7 +385,7 @@ Node* GetWhile( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 		
-		Node* nodeL = GetCompare( nodes, curPos );
+		Node* nodeL = GetCallFunction( nodes, curPos, true );
 
 		ASSERT_L_BRACE // !:
 
@@ -395,6 +397,73 @@ Node* GetWhile( Node** nodes, int* curPos )
 	}
 
 	GetIf( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetCallParams( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetCallParams" );
+	LOG( "%d :", *curPos );	
+
+	Node* node     = NULL;
+	Node* lastNode = NULL;
+
+	int isNewParam = false;
+
+	while( CUR_NODE_TYPE == VAR_TYPE ||
+		   CUR_NODE_TYPE == VAL_TYPE || 
+	       CUR_NODE_TYPE == OP_TYPE  ||
+	       isNewParam )
+	{	
+		if( node ) assert( isNewParam == true );
+
+		Node* nodeTemp  = GetCallFunction( nodes, curPos, true );
+
+		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
+
+		if( !lastNode ) { node            = nodeParam; lastNode = node;            }
+		else            { lastNode->right = nodeParam; lastNode = lastNode->right; }
+		
+		if( CUR_NODE_TYPE == COMMA_TYPE ) { isNewParam = true;  NEXT_TOKEN }
+		else                              { isNewParam = false;            }
+	}
+
+	return  node;
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetCallFunction( Node** nodes, int* curPos, int isRet )
+{
+	LOG( "Enter GetCallFunction" );
+	LOG( "%d :", *curPos );	
+
+	if( CUR_NODE_TYPE == VAR_TYPE )
+	{
+		char* name = CUR_NODE_VAR;
+		
+		NEXT_TOKEN
+
+		if( CUR_NODE_TYPE != L_BRACKET_TYPE ) 
+		{ 
+			PREV_TOKEN
+			
+			if( isRet ) return GetCompare( nodes, curPos );
+
+			return GetEqual( nodes, curPos ); 
+		}
+
+		NEXT_TOKEN
+		
+		Node* nodeL = GetCallParams( nodes, curPos );
+
+		ASSERT_R_BRACKET // )
+
+		return CREATE_TYPE_NODE_LR(  CALL_TYPE, CREATE_VAR_NODE_LR( name, nodeL, NULL ), NULL  );
+	}
+
+	return GetCompare( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
@@ -525,7 +594,7 @@ Node* GetBracket( Node** nodes, int* curPos )
 
 		LOG( "(" ); 
 		
-		Node* node = GetCompare( nodes, curPos );
+		Node* node = GetCallFunction( nodes, curPos, true );
 		
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
 		NEXT_TOKEN
