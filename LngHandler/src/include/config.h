@@ -131,7 +131,7 @@ static OpStr OpStrings[] =
     { OP_BE,   "<=",  "IS_BE",  "is_be" },
     { OP_GT,   ">",   "IS_GT",  "is_gt" },
     { OP_BT,   "<",   "IS_BT",  "is_bt" },
-    { OP_NE,   "!=",  "IS_BT",  "is_ne" }
+    { OP_NE,   "!=",  "IS_NE",  "is_ne" }
 };
 
 static const int NumOpStrings = sizeof( OpStrings ) / sizeof( OpStr );

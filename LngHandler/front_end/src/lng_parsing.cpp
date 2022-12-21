@@ -191,9 +191,10 @@ Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 	int isNewParam = false;
 
 	while(   
-		   CUR_NODE_TYPE == VAR_TYPE                        ||
-		 ( CUR_NODE_TYPE == VAL_TYPE && typeParams == OUT )	|| 
-	     ( CUR_NODE_TYPE == OP_TYPE  && typeParams == OUT ) ||
+		   CUR_NODE_TYPE == VAR_TYPE                              ||
+		 ( CUR_NODE_TYPE == VAL_TYPE       && typeParams == OUT ) || 
+	     ( CUR_NODE_TYPE == OP_TYPE        && typeParams == OUT ) ||
+		 ( CUR_NODE_TYPE == L_BRACKET_TYPE && typeParams == OUT ) ||
 	       isNewParam 
 		 )
 	{	
