@@ -159,8 +159,6 @@ endif003:
 
 push -4 + rax
 pop rax ; Shifting down the var register
-push -1
-out
 push 0
 ret
 ret
