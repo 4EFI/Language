@@ -396,7 +396,26 @@ Node* GetWhile( Node** nodes, int* curPos )
 		return CREATE_TYPE_NODE_LR( WHILE_TYPE, nodeL, nodeR );	
 	}
 
-	GetIf( nodes, curPos );
+	GetReturn( nodes, curPos );
+}
+
+//-----------------------------------------------------------------------------
+
+Node* GetReturn( Node** nodes, int* curPos )
+{
+	LOG( "Enter GetReturn" );
+	LOG( "%d :", *curPos );
+
+	if( CUR_NODE_TYPE == RET_TYPE )
+	{	
+		NEXT_TOKEN
+
+		Node* node = GetCallFunction( nodes, curPos, true );
+
+		return CREATE_TYPE_NODE_LR( RET_TYPE, node, NULL );
+	}
+
+	return GetIf( nodes, curPos );
 }
 
 //-----------------------------------------------------------------------------
