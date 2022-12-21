@@ -410,6 +410,8 @@ Node* GetReturn( Node** nodes, int* curPos )
 	{	
 		NEXT_TOKEN
 
+		if( CUR_NODE_TYPE == SEMICOLON_TYPE ) { NEXT_TOKEN; return CREATE_TYPE_NODE_LR( RET_TYPE, NULL, NULL ); }
+
 		Node* node = GetCallFunction( nodes, curPos, true );
 
 		return CREATE_TYPE_NODE_LR( RET_TYPE, node, NULL );

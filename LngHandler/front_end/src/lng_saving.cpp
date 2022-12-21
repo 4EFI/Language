@@ -28,6 +28,13 @@ int PrintPreorderLngNodes( Node* node, FILE* file )
 
     fprintf( file, "{ %s ", str );
 
+    // double { NIL } for CALL/RET
+    if( node->parent && ( ( node->value->type == VAR_TYPE && node->parent->value->type == CALL_TYPE ) || 
+                                                             node->value->type         == RET_TYPE ) )
+    {
+        if( !node->left && !node->right ) { fprintf( file, "{ NIL } { NIL } } " ); return 1; }
+    }
+
     if( node->left || node->right )
     {
         PrintPreorderLngNodes( node->left,  file );

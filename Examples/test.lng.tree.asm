@@ -23,7 +23,7 @@ pop rbx ; set "i" pos
 
 push [ rbx ] ; push "i"
 push 5
-sub
+is_bt
 push 0
 je :endWhile001
 
@@ -36,11 +36,11 @@ push 11
 pop [ rbx ] ; set "lokal"
 
 push rax
-push -1
+push 0
 add
-pop rbx ; set "i" pos
+pop rbx ; set "lokal" pos
 
-push [ rbx ] ; push "i"
+push [ rbx ] ; push "lokal"
 out
 push 1
 push rax
@@ -52,8 +52,8 @@ add
 pop rbx ; set "i" pos
 
 push [ rbx ] ; push "i"
-push 2
-sub
+push 0
+is_ee
 push 0
 je :endif001
 
@@ -62,7 +62,7 @@ push 0
 add
 pop rbx ; set "opa" pos
 
-push 500
+push 100
 pop [ rbx ] ; set "opa"
 
 push rax
@@ -71,6 +71,7 @@ add
 pop rbx ; set "opa" pos
 
 push [ rbx ] ; push "opa"
+sqrt
 out
 
 endif001:
