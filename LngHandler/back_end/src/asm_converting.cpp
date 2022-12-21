@@ -129,8 +129,6 @@ int IfToAsm( Node* node, FILE* file )
 
     ifCount++;
 
-    AddLocalVarsBlock( file );    // {
-
     CallFuncToAsm( node->left, file );
 
     fprintf( file, "push 0\nje :endif%03d\n\n", ifCount );
@@ -149,14 +147,8 @@ int IfToAsm( Node* node, FILE* file )
 
     if( isElse )
     {
-        AddLocalVarsBlock( file );    // {
-
         TreeToAsm( node->right->right, file );
-
-        RemoveLocalVarsBlock( file ); // }
     }
-
-    RemoveLocalVarsBlock( file ); // }
 
     return 1;
 }
@@ -174,8 +166,6 @@ int WhileToAsm( Node* node, FILE* file )
 
     whileCount++;
 
-    AddLocalVarsBlock( file );    // {
-
     // While start
     fprintf( file, "\nwhile%03d:\n", whileCount );
 
@@ -186,8 +176,6 @@ int WhileToAsm( Node* node, FILE* file )
     TreeToAsm( node->right, file );
 
     fprintf( file, "\njmp :while%03d\n" "endWhile%03d:\n\n", whileCount, whileCount );
-
-    RemoveLocalVarsBlock( file ); // }
 
     return 1;
 }
@@ -267,13 +255,13 @@ int FuncToAsm( Node* node, FILE* file )
     if( NODE_TYPE != FUNC_TYPE ) return 0;
 
     fprintf( file, "%s:\n", L_VAR );
-    //AddLocalVarsBlock( file, true ); // {
+    AddLocalVarsBlock( file, true ); // {
 
     FuncParamsToAsm( node->left->left, file );
 
     TreeToAsm( node->right, file );
 
-    //RemoveLocalVarsBlock( file );    // }
+    RemoveLocalVarsBlock( file );    // }
     fprintf( file, "ret\n" );
     fprintf( file, "end%s:\n", L_VAR );
 
@@ -341,14 +329,11 @@ int CallFuncToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != CALL_TYPE ) return MathExpressionToAsm( node, file );
 
-
     CallParamsToAsm( node->left->left, file, FUNC );
-    
-    AddLocalVarsBlock( file, true ); // {
 
+    ShiftRegTop( file );
     fprintf( file, "call :%s\n", L_VAR );
-    
-    RemoveLocalVarsBlock( file );    // }
+    ShiftRegDown( file );
 
     return 1;
 }

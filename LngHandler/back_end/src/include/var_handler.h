@@ -20,6 +20,11 @@ struct VarTable
 int AddLocalVarsBlock   ( FILE* file, int isNewFunc = false );
 int RemoveLocalVarsBlock( FILE* file );
 
+int ShiftRegTop ( FILE* file );
+int ShiftRegDown( FILE* file );
+
+int ShigtRegDownFunc( FILE* file );
+
 int GetTableVarPos( const char* varName );
 int AddVarToTable ( const char* varName );
 

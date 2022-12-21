@@ -27,15 +27,24 @@ int AddLocalVarsBlock( FILE* file, int isNewFunc )
 
     VarTable* varTable  = ( VarTable* )calloc( 1, sizeof( VarTable ) );
     varTable->pos       = 0; 
-    varTable->numVars   = 0; // 0
+    varTable->numVars   = 0;
     varTable->isNewFunc = isNewFunc;
     
     StackPush( &StkVarTables, varTable );
 
-    int stkSize = StkVarTables.size;
-    if( stkSize > 1 ) // Shift rax
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int ShiftRegTop( FILE* file )
+{
+    ASSERT( file != NULL, NULL );
+
+    int curStkPos  = StkVarTables.size - 1;
+    if( curStkPos >= 0 ) // Shift rax
     {
-        fprintf( file, "push %d + rax\n", StkVarTables.data[ stkSize - 2 ]->numVars );
+        fprintf( file, "push %d + rax\n", StkVarTables.data[ curStkPos ]->numVars );
         fprintf( file, "pop rax ; Shifting top the var register\n" );
 
         LOG( "New block" );
@@ -52,15 +61,41 @@ int RemoveLocalVarsBlock( FILE* file )
 
     StackPop( &StkVarTables );
 
-    int stkSize = StkVarTables.size;
-    if( stkSize > 0 )
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int ShiftRegDown( FILE* file )
+{
+    ASSERT( file != NULL, 0 );
+    
+    int curStkPos  = StkVarTables.size - 1;
+    if( curStkPos >= 0 )
     {
-        fprintf( file, "push %d + rax\n", -StkVarTables.data[ stkSize - 1 ]->numVars );
+        fprintf( file, "push %d + rax\n", -StkVarTables.data[ curStkPos ]->numVars );
         fprintf( file, "pop rax ; Shifting down the var register\n" );
         
         LOG( "Remove block" );
     }
 
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int ShigtRegDownFunc( FILE* file )
+{
+    ASSERT( file != NULL, 0 );
+
+    for( int i = StkVarTables.size - 1; i >= 0; i-- )
+    {
+        fprintf( file, "push %d + rax\n", -StkVarTables.data[ i ]->numVars );
+        fprintf( file, "pop rax ; Shifting down the var register\n" );
+
+        if( StkVarTables.data[ i ]->isNewFunc ) break;
+    }
+    
     return 1;
 }
 
