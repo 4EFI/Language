@@ -27,7 +27,7 @@ int TreeToAsmConverting( Node* node, FILE* file )
 
     AddLocalVarsBlock( file );
 
-    fprintf( file, "jmp :Mein\n" );
+    fprintf( file, "call :Mein\n" );
     fprintf( file, "hlt\n" );
 
     TreeToAsm( node, file );
@@ -267,13 +267,13 @@ int FuncToAsm( Node* node, FILE* file )
     if( NODE_TYPE != FUNC_TYPE ) return 0;
 
     fprintf( file, "%s:\n", L_VAR );
-    AddLocalVarsBlock( file, true ); // {
+    //AddLocalVarsBlock( file, true ); // {
 
     FuncParamsToAsm( node->left->left, file );
 
     TreeToAsm( node->right, file );
 
-    RemoveLocalVarsBlock( file );    // }
+    //RemoveLocalVarsBlock( file );    // }
     fprintf( file, "ret\n" );
     fprintf( file, "end%s:\n", L_VAR );
 
@@ -341,9 +341,14 @@ int CallFuncToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != CALL_TYPE ) return MathExpressionToAsm( node, file );
 
+
     CallParamsToAsm( node->left->left, file, FUNC );
+    
+    AddLocalVarsBlock( file, true ); // {
 
     fprintf( file, "call :%s\n", L_VAR );
+    
+    RemoveLocalVarsBlock( file );    // }
 
     return 1;
 }

@@ -1,193 +1,62 @@
-jmp :Mein
-Petrovich:
-push 0
-push rax
-add
-pop rax ; Shifting top the var register
-push rax
-push 0
-add
-pop rbx ; set "a" pos
+call :Mein
+hlt
+Faktorial:
+push rax + 0
+pop rbx ; set "n" pos
 
 pop [ rbx ]
 
-push rax
-push 1
-add
-pop rbx ; set "b" pos
+push rax + 0
+pop rbx ; set "n" pos
 
-pop [ rbx ]
-
-push rax
-push 0
-add
-pop rbx ; set "a" pos
-
-push [ rbx ] ; push "a"
-push rax
-push 1
-add
-pop rbx ; set "b" pos
-
-push [ rbx ] ; push "b"
-add
+push [ rbx ] ; push "n"
 out
-push rax
-push 0
-add
-pop rbx ; set "a" pos
-
-push [ rbx ] ; push "a"
-push rax
-push 1
-add
-pop rbx ; set "b" pos
-
-push [ rbx ] ; push "b"
-add
-push rax
-push 0
-add
-pop rbx ; set "a" pos
-
-push [ rbx ] ; push "a"
-push rax
-push 1
-add
-pop rbx ; set "b" pos
-
-push [ rbx ] ; push "b"
-add
-push 0
-push rax
-add
-pop rax ; Shifting down the var register
-ret
-endPetrovich:
-Mein:
-push 0
-push rax
-add
+push 1 + rax
 pop rax ; Shifting top the var register
-push 10
-push 2
-push rbx
- pop rcx ; save pos before call
-call :Petrovich
-push rcx
- pop rcx ; save pos before call
-push rax
-push 0
-add
-pop rbx ; set "i" pos
+push rax + -1
+pop rbx ; set "n" pos
 
-pop [ rbx ] ; set "i"
-
-push rax
-push 0
-add
-pop rbx ; set "i" pos
-
-push [ rbx ] ; push "i"
-out
+push [ rbx ] ; push "n"
 push 1
-push rax
-add
-pop rax ; Shifting top the var register
-
-while001:
-push rax
-push -1
-add
-pop rbx ; set "i" pos
-
-push [ rbx ] ; push "i"
-push 5
-is_bt
-push 0
-je :endWhile001
-
-push 11
-push rax
-push 0
-add
-pop rbx ; set "lokal" pos
-
-pop [ rbx ] ; set "lokal"
-
-push rax
-push 0
-add
-pop rbx ; set "lokal" pos
-
-push [ rbx ] ; push "lokal"
-out
-push 1
-push rax
-add
-pop rax ; Shifting top the var register
-push rax
-push -2
-add
-pop rbx ; set "i" pos
-
-push [ rbx ] ; push "i"
-push 0
-is_ee
+is_be
 push 0
 je :endif001
 
-push 100
-push rax
-push 0
-add
-pop rbx ; set "opa" pos
-
-pop [ rbx ] ; set "opa"
-
-push rax
-push 0
-add
-pop rbx ; set "opa" pos
-
-push [ rbx ] ; push "opa"
-sqrt
-out
+push 1
+ret
 
 endif001:
 
-push -1
-push rax
-add
+push -1 + rax
 pop rax ; Shifting down the var register
-push rax
-push -1
-add
-pop rbx ; set "i" pos
+push rax + 0
+pop rbx ; set "n" pos
 
-push [ rbx ] ; push "i"
+push [ rbx ] ; push "n"
+push rax + 0
+pop rbx ; set "n" pos
+
+push [ rbx ] ; push "n"
 push 1
-add
-push rax
-push -1
-add
-pop rbx ; set "i" pos
-
-pop [ rbx ] ; set "i"
-
-
-jmp :while001
-endWhile001:
-
-push -1
-push rax
-add
+sub
+push 1 + rax
+pop rax ; Shifting top the var register
+call :Faktorial
+push -1 + rax
 pop rax ; Shifting down the var register
+mul
+ret
+ret
+endFaktorial:
+Mein:
+push 5
+push 1 + rax
+pop rax ; Shifting top the var register
+call :Faktorial
+push -1 + rax
+pop rax ; Shifting down the var register
+out
 push 0
-push rax
-add
-pop rax ; Shifting down the var register
+ret
 ret
 endMein:
-
-hlt
