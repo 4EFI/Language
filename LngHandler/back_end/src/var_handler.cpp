@@ -35,9 +35,7 @@ int AddLocalVarsBlock( FILE* file, int isNewFunc )
     int stkSize = StkVarTables.size;
     if( stkSize > 1 ) // Shift rax
     {
-        fprintf( file, "push %d\n", StkVarTables.data[ stkSize - 2 ]->numVars );
-        fprintf( file, "push rax\n" );
-        fprintf( file, "add\n" );
+        fprintf( file, "push %d + rax\n", StkVarTables.data[ stkSize - 2 ]->numVars );
         fprintf( file, "pop rax ; Shifting top the var register\n" );
 
         LOG( "New block" );
@@ -57,9 +55,7 @@ int RemoveLocalVarsBlock( FILE* file )
     int stkSize = StkVarTables.size;
     if( stkSize > 0 )
     {
-        fprintf( file, "push %d\n", -StkVarTables.data[ stkSize - 1 ]->numVars );
-        fprintf( file, "push rax\n" );
-        fprintf( file, "add\n" );
+        fprintf( file, "push %d + rax\n", -StkVarTables.data[ stkSize - 1 ]->numVars );
         fprintf( file, "pop rax ; Shifting down the var register\n" );
         
         LOG( "Remove block" );

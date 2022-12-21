@@ -28,10 +28,9 @@ int TreeToAsmConverting( Node* node, FILE* file )
     AddLocalVarsBlock( file );
 
     fprintf( file, "jmp :Mein\n" );
+    fprintf( file, "hlt\n" );
 
     TreeToAsm( node, file );
-
-    fprintf( file, "\nhlt\n" );
 
     return 1;
 }
@@ -375,9 +374,7 @@ int VarRAMPosToAsm( const char* varName, FILE* file )
 
     int pos = GetTableVarPos( varName );
     
-    fprintf( file, "push rax\n" );
-    fprintf( file, "push %d\n", pos );
-    fprintf( file, "add\n" );
+    fprintf( file, "push rax + %d\n", pos );
     fprintf( file, "pop rbx ; set \"%s\" pos\n\n", varName );
 
     return pos;
