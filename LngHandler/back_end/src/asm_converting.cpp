@@ -104,6 +104,9 @@ int MathExpressionToAsm( Node* node, FILE* file )
             fprintf( file, "push [ rbx ] ; push \"%s\"\n", NODE_VAR );
             break;
         }
+
+        default:
+            return 0;
     }
 
     return 1; 
@@ -198,9 +201,8 @@ int VarInitToAsm( Node* node, FILE* file )
 
     VarRAMPosToAsm( L_VAR, file );
 
-    MathExpressionToAsm( node->right, file );
-
-    fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
+    int isVal = MathExpressionToAsm( node->right, file );
+    if( isVal ) fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
 
     return 1;
 }  
