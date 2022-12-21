@@ -201,8 +201,8 @@ Node* GetInOutParams( Node** nodes, int* curPos, int typeParams )
 
 		Node* nodeTemp = NULL;
 
-		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;                   }
-		else                   { nodeTemp = GetCallFunction( nodes, curPos, true ); }
+		if( typeParams == IN ) { nodeTemp = CUR_NODE; NEXT_TOKEN;             }
+		else                   { nodeTemp = GetCallFunction( nodes, curPos ); }
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
 
@@ -234,7 +234,7 @@ Node* VarInitHandler( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 
-		nodeR = GetCallFunction( nodes, curPos, true );
+		nodeR = GetCallFunction( nodes, curPos );
 	}
 
 	return CREATE_TYPE_NODE_LR( VAR_INIT_TYPE, nodeL, nodeR );
@@ -300,12 +300,12 @@ Node* GetEqual( Node** nodes, int* curPos )
 		if( CUR_NODE_TYPE != EQ_TYPE )
 		{
 			PREV_TOKEN
-			return GetCallFunction( nodes, curPos, false );
+			return GetCallFunction( nodes, curPos);
 		}
 		
 		NEXT_TOKEN
 
-		Node* nodeR = GetCallFunction( nodes, curPos, true );
+		Node* nodeR = GetCallFunction( nodes, curPos );
 
 		return CREATE_TYPE_NODE_LR( EQ_TYPE, nodeL, nodeR );
 	}
@@ -330,7 +330,7 @@ Node* GetIf( Node** nodes, int* curPos )
 		isElse = false;
 		
 		NEXT_TOKEN
-		Node* nodeL = GetCallFunction( nodes, curPos, true );
+		Node* nodeL = GetCallFunction( nodes, curPos );
 
 		ASSERT_L_BRACE // !:
 
@@ -385,7 +385,7 @@ Node* GetWhile( Node** nodes, int* curPos )
 	{
 		NEXT_TOKEN
 		
-		Node* nodeL = GetCallFunction( nodes, curPos, true );
+		Node* nodeL = GetCallFunction( nodes, curPos );
 
 		ASSERT_L_BRACE // !:
 
@@ -412,7 +412,7 @@ Node* GetReturn( Node** nodes, int* curPos )
 
 		if( CUR_NODE_TYPE == SEMICOLON_TYPE ) { NEXT_TOKEN; return CREATE_TYPE_NODE_LR( RET_TYPE, NULL, NULL ); }
 
-		Node* node = GetCallFunction( nodes, curPos, true );
+		Node* node = GetCallFunction( nodes, curPos );
 
 		return CREATE_TYPE_NODE_LR( RET_TYPE, node, NULL );
 	}
@@ -439,7 +439,7 @@ Node* GetCallParams( Node** nodes, int* curPos )
 	{	
 		if( node ) assert( isNewParam == true );
 
-		Node* nodeTemp  = GetCallFunction( nodes, curPos, true );
+		Node* nodeTemp  = GetCallFunction( nodes, curPos );
 
 		Node* nodeParam = CREATE_TYPE_NODE_LR( PARAM_TYPE, nodeTemp, NULL );
 
@@ -455,7 +455,7 @@ Node* GetCallParams( Node** nodes, int* curPos )
 
 //-----------------------------------------------------------------------------
 
-Node* GetCallFunction( Node** nodes, int* curPos, int isRet )
+Node* GetCallFunction( Node** nodes, int* curPos )
 {
 	LOG( "Enter GetCallFunction" );
 	LOG( "%d :", *curPos );	
@@ -613,7 +613,7 @@ Node* GetBracket( Node** nodes, int* curPos )
 
 		LOG( "(" ); 
 		
-		Node* node = GetCallFunction( nodes, curPos, true );
+		Node* node = GetCallFunction( nodes, curPos );
 		
 		assert( CUR_NODE_TYPE == R_BRACKET_TYPE );
 		NEXT_TOKEN

@@ -13,7 +13,7 @@ Node* GetGrammar     ( Node** nodes, int* curPos );
 Node* GetStatement   ( Node** nodes, int* curPos );
 Node* GetReturn      ( Node** nodes, int* curPos );
 Node* GetCallParams  ( Node** nodes, int* curPos );
-Node* GetCallFunction( Node** nodes, int* curPos, int isRet = false ); // x = func ( 5 ) => isRet = true
+Node* GetCallFunction( Node** nodes, int* curPos ); 
 Node* GetFunction    ( Node** nodes, int* curPos );
 Node* GetParams      ( Node** nodes, int* curPos );
 Node* GetInput       ( Node** nodes, int* curPos );
