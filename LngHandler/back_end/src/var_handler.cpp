@@ -26,7 +26,8 @@ int AddLocalVarsBlock( FILE* file, int isNewFunc )
     if(        isStkEmpty        ) { isStkEmpty = false; StackCtor( &StkVarTables, 1 ); }
 
     VarTable* varTable  = ( VarTable* )calloc( 1, sizeof( VarTable ) );
-    varTable->numVars   = 0;
+    varTable->pos       = 0; 
+    varTable->numVars   = 0; // 0
     varTable->isNewFunc = isNewFunc;
     
     StackPush( &StkVarTables, varTable );
@@ -120,7 +121,7 @@ int AddVarToTable( const char* varName )
     int curVarPos = StkVarTables.data[ curTable ]->numVars;
 
     StkVarTables.data[ curTable ]->varNames[ curVarPos ] = ( char* )varName; // set varName
-    StkVarTables.data[ curTable ]->numVars++;
+    StkVarTables.data[ curTable ]->numVars++; 
 
     return curVarPos;
 }

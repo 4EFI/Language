@@ -58,6 +58,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += VarEqualToAsm      ( node, file );
     isAsm += MathExpressionToAsm( node, file );
     isAsm += CallFuncToAsm      ( node, file );
+    isAsm += ReturnToAsm        ( node, file );
 
     if( isAsm ) return 0;
     
@@ -82,8 +83,8 @@ int MathExpressionToAsm( Node* node, FILE* file )
         return 0;
     }
 
-    if( node->left  ) MathExpressionToAsm( node->left,  file );
-    if( node->right ) MathExpressionToAsm( node->right, file );
+    if( node->left  ) CallFuncToAsm( node->left,  file );
+    if( node->right ) CallFuncToAsm( node->right, file );
 
     switch( NODE_TYPE )
     {
@@ -343,9 +344,24 @@ int CallFuncToAsm( Node* node, FILE* file )
 
     CallParamsToAsm( node->left->left, file, FUNC );
 
-    fprintf( file, "push rbx\n pop rcx ; save pos before call\n" );
     fprintf( file, "call :%s\n", L_VAR );
-    fprintf( file, "push rcx\n pop rcx ; save pos before call\n" );
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int ReturnToAsm( Node* node, FILE* file )
+{
+    ASSERT( file != NULL, 0 );
+
+    if( !node ) return 0;
+
+    if( NODE_TYPE != RET_TYPE ) return 0;
+
+    CallFuncToAsm( node->left, file );
+
+    fprintf( file, "ret\n" );
 
     return 1;
 }

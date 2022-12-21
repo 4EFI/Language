@@ -26,6 +26,7 @@ int OutputToAsm        ( Node* node, FILE* file );
 int FuncParamsToAsm    ( Node* node, FILE* file );
 int FuncToAsm          ( Node* node, FILE* file );
 int CallFuncToAsm      ( Node* node, FILE* file );
+int ReturnToAsm        ( Node* node, FILE* file );
 int CallParamsToAsm    ( Node* node, FILE* file, int typeParams );
 
 int VarRAMPosToAsm( const char* varName, FILE* file );

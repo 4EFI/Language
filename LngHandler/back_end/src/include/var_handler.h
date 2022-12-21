@@ -9,7 +9,8 @@ const int MaxNumVars = 100;
 
 struct VarTable
 {
-    char* varNames[ MaxNumVars ];
+    char* varNames[ MaxNumVars + 1 ];
+    int   pos;
     int   numVars;
     int   isNewFunc;
 };
