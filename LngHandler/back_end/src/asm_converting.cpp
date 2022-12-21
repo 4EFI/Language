@@ -27,6 +27,8 @@ int TreeToAsmConverting( Node* node, FILE* file )
 
     AddLocalVarsBlock( file );
 
+    fprintf( file, "jmp :Mein\n" );
+
     TreeToAsm( node, file );
 
     fprintf( file, "\nhlt\n" );
@@ -55,6 +57,7 @@ int TreeToAsm( Node* node, FILE* file )
     isAsm += VarInitToAsm       ( node, file );
     isAsm += VarEqualToAsm      ( node, file );
     isAsm += MathExpressionToAsm( node, file );
+    isAsm += CallFuncToAsm      ( node, file );
 
     if( isAsm ) return 0;
     
@@ -128,7 +131,7 @@ int IfToAsm( Node* node, FILE* file )
 
     AddLocalVarsBlock( file );    // {
 
-    MathExpressionToAsm( node->left, file );
+    CallFuncToAsm( node->left, file );
 
     fprintf( file, "push 0\nje :endif%03d\n\n", ifCount );
 
@@ -176,7 +179,7 @@ int WhileToAsm( Node* node, FILE* file )
     // While start
     fprintf( file, "\nwhile%03d:\n", whileCount );
 
-    MathExpressionToAsm( node->left, file );
+    CallFuncToAsm( node->left, file );
 
     fprintf( file, "push 0\nje :endWhile%03d\n\n", whileCount );
 
@@ -198,11 +201,12 @@ int VarInitToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != VAR_INIT_TYPE ) return 0;
 
-    int pos = AddVarToTable( L_VAR );
+    AddVarToTable( L_VAR );
 
+    int isVal = CallFuncToAsm( node->right, file );
+    
     VarRAMPosToAsm( L_VAR, file );
-
-    int isVal = MathExpressionToAsm( node->right, file );
+    
     if( isVal ) fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
 
     return 1;
@@ -217,10 +221,9 @@ int VarEqualToAsm( Node* node, FILE* file )
 
     if( NODE_TYPE != EQ_TYPE ) return 0;
 
-    MathExpressionToAsm( node->right, file );
+    CallFuncToAsm( node->right, file );
 
     VarRAMPosToAsm( L_VAR, file );
-
     fprintf( file, "pop [ rbx ] ; set \"%s\"\n\n", L_VAR );
 
     return 1;
@@ -270,8 +273,9 @@ int FuncToAsm( Node* node, FILE* file )
 
     TreeToAsm( node->right, file );
 
-    fprintf( file, "end%s:\n", L_VAR );
     RemoveLocalVarsBlock( file );    // }
+    fprintf( file, "ret\n" );
+    fprintf( file, "end%s:\n", L_VAR );
 
     return 1;
 }   
@@ -299,9 +303,10 @@ int FuncParamsToAsm( Node* node, FILE* file )
 //-----------------------------------------------------------------------------
 
 int CallParamsToAsm( Node* node, FILE* file, int typeParams )
-{
-    ASSERT( node != NULL, 0 );    
+{ 
     ASSERT( file != NULL, 0 );
+
+    if( !node ) return 0;
 
     if( NODE_TYPE != PARAM_TYPE ) return 0;
 
@@ -309,8 +314,8 @@ int CallParamsToAsm( Node* node, FILE* file, int typeParams )
 
     if( node->left ) 
     {
-        if/* */( typeParams == IN  ) VarRAMPosToAsm     ( L_VAR,      file );
-        else if( typeParams == OUT ) MathExpressionToAsm( node->left, file );
+        if/* */( typeParams == IN  ) VarRAMPosToAsm( L_VAR,      file );
+        else if( typeParams == OUT ) CallFuncToAsm ( node->left, file );
     }
 
     if( typeParams == OUT ) fprintf( file, "out\n" );
@@ -320,8 +325,27 @@ int CallParamsToAsm( Node* node, FILE* file, int typeParams )
     
     if( node->left  ) 
     {
-        if( typeParams == FUNC ) MathExpressionToAsm( node->left, file );
+        if( typeParams == FUNC ) CallFuncToAsm( node->left, file );
     }
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+
+int CallFuncToAsm( Node* node, FILE* file )
+{    
+    ASSERT( file != NULL, 0 );
+
+    if( !node ) return 0;
+
+    if( NODE_TYPE != CALL_TYPE ) return MathExpressionToAsm( node, file );
+
+    CallParamsToAsm( node->left->left, file, FUNC );
+
+    fprintf( file, "push rbx\n pop rcx ; save pos before call\n" );
+    fprintf( file, "call :%s\n", L_VAR );
+    fprintf( file, "push rcx\n pop rcx ; save pos before call\n" );
 
     return 1;
 }

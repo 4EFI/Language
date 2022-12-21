@@ -470,9 +470,7 @@ Node* GetCallFunction( Node** nodes, int* curPos, int isRet )
 		{ 
 			PREV_TOKEN
 			
-			if( isRet ) return GetCompare( nodes, curPos );
-
-			return GetEqual( nodes, curPos ); 
+			return GetCompare( nodes, curPos );
 		}
 
 		NEXT_TOKEN
