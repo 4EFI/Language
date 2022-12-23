@@ -114,7 +114,7 @@ struct OpStr
     const char* strAsm;
 };
 
-static OpStr OpStrings[] = 
+static const OpStr OpStrings[] = 
 {  
     { OP_ADD,  "+",   "ADD",    "add"   },
     { OP_SUB,  "-",   "SUB",    "sub"   },
@@ -150,7 +150,7 @@ struct TypeStr
     const char* strStandart;
 };
 
-static TypeStr TypeStrings[] = 
+static const TypeStr TypeStrings[] = 
 {
     { END_PROG_TYPE,  "\\0", "" },
     { SEMICOLON_TYPE, ";", "" },

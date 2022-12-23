@@ -8,12 +8,21 @@ OBJ     = $(subst src,src/build, $(OBJ_TMP))
 
 #compiling
 
-complie : $(LIBS) $(OBJ) 
-	make -C ./front_end	
-	make -C ./back_end	
-	make -C ./compiling
-	make -C ./execution/ASM
-	make -C ./execution/CPU
+ifdef MAIN_MAKE
+
+all : $(LIBS) $(OBJ) 
+	make -C ./front_end	    -f    ../MakeFile
+	make -C ./back_end      -f    ../MakeFile
+	make -C ./compiling     -f    ../MakeFile
+	make -C ./execution/ASM -f ../../MakeFile
+	make -C ./execution/CPU -f ../../MakeFile
+
+else
+
+link : $(LIBS) $(OBJ) 
+	$(CC) $(IFLAGS) $(CFLAGS) $^ -o $(OUTPUT_FILE_NAME) 
+
+endif
 
 
 src/build/%.o : src/%.cpp  	
@@ -21,9 +30,20 @@ src/build/%.o : src/%.cpp
 	mkdir -p $(@D)
 	$(CC) $(IFLAGS) $(CFLAGS) -c $^ -o $@	
 
+ifdef MAIN_MAKE
+
 clear :
-	rm -f ./src/build/*.o
-	make -C ./front_end clear
-	make -C ./back_end clear
-	make -C ./execution/ASM clear
-	make -C ./execution/CPU clear
+	rm   -f ./src/build/*.o
+	make -C ./front_end     -f    ../MakeFile clear 
+	make -C ./back_end      -f    ../MakeFile clear
+	make -C ./compiling     -f    ../MakeFile clear
+	make -C ./execution/ASM -f ../../MakeFile clear
+	make -C ./execution/CPU -f ../../MakeFile clear
+
+else
+
+clear :
+	rm -f ./src/build/*.o	
+
+endif
+

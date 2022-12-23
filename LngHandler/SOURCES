@@ -1,6 +1,8 @@
 
 # makefile data 
 
+MAIN_MAKE = true
+
 SRC = src/ru_translitor.cpp    \
  	  src/tree_lng.cpp         \
 	  src/tree_lng_dump.cpp    \
